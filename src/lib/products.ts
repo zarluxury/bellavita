@@ -73,7 +73,7 @@ export async function getProductsByCategory(categorySlug: string): Promise<any[]
     throw new Error('Category not found');
   }
 
-  return categoryData.products.map((product) => ({
+  return categoryData.products.map((product: { name: any; imageUrl: any; description: any; }) => ({
     name: product.name,
     image: product.imageUrl || '',
     description: product.description || ''
@@ -93,7 +93,7 @@ export async function getAllCategories() {
 
   // Get product counts separately
   const categoriesWithCounts = await Promise.all(
-    categories.map(async (category) => {
+    categories.map(async (category: { id: any; slug: any; name: any; }) => {
       const productCount = await prisma.product.count({
         where: { categoryId: category.id }
       });
