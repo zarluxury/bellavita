@@ -1,13 +1,16 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
   images: {
-    domains: [
-      'pub-4635819442b54e6684ecdaa44810ab46.r2.dev'
+    remotePatterns: [
+      {
+        protocol: 'https',
+        hostname: 'pub-4635819442b54e6684ecdaa44810ab46.r2.dev',
+        port: '',
+        pathname: '/**',
+      },
     ],
   },
-  experimental: {
-    serverComponentsExternalPackages: ['@prisma/client'],
-  },
+  serverExternalPackages: ['@prisma/client'],
 }
 
 module.exports = nextConfig
