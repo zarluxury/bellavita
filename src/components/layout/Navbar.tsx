@@ -5,6 +5,7 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { Menu, X, ChevronDown } from 'lucide-react';
 import Link from 'next/link';
 import Button from '../ui/Button';
+import Image from 'next/image';
 
 const Navbar: React.FC = () => {
   const [isOpen, setIsOpen] = useState(false);
@@ -30,7 +31,11 @@ const Navbar: React.FC = () => {
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex justify-between items-center h-20">
           <Link href="/" className="text-2xl font-bold text-white">
-            Bellavita
+            <img
+            src="/images/logo/logo.png"
+            className='h-22 p-1'
+            alt="Bellavita Logo"
+            />
           </Link>
 
           <div className="hidden md:flex items-center space-x-8">
