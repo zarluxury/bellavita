@@ -79,12 +79,6 @@ const ProductCategoryPage: React.FC = () => {
       icon: <Camera className="w-8 h-8" />,
       description: 'Programmable switches for custom scene control and automation.',
       folder: 'SCENE SWITCH'
-    },
-    'smart-knob': {
-      title: 'Smart Knob',
-      icon: <Power className="w-8 h-8" />,
-      description: 'Intelligent knob controls for smart home automation.',
-      folder: 'SMART KNOB'
     }
   };
 
@@ -110,27 +104,50 @@ const ProductCategoryPage: React.FC = () => {
         const response = await fetch(`/api/products?category=${category}`);
         const data = await response.json();
         
-        if (data.success && data.data.products && data.data.products.length > 0) {
-          setProducts(data.data.products);
-          setCategoryInfo({
-            title: data.data.category.title,
-            icon: categoryMap[category]?.icon || <Power className="w-8 h-8" />,
-            description: data.data.category.folder
-          });
+        if (data.products && data.products.length > 0) {
+          setProducts(data.products);
         } else {
-          // No products found, show empty state
-          setProducts([]);
-          if (categoryMap[category]) {
-            setCategoryInfo(categoryMap[category]);
-          }
+          // Generate multiple sample products for better UX
+          const sampleProducts: Product[] = [
+            {
+              name: `${info.title} - Premium Model`,
+              image: `/images/PRODUCT DRIVE/${info.folder}/1 MODULE SWITCH.png`,
+              description: `Advanced ${info.title.toLowerCase()} with premium features and smart home integration.`
+            },
+            {
+              name: `${info.title} - Pro Series`,
+              image: `/images/PRODUCT DRIVE/${info.folder}/2 MODULE SWITCH.png`,
+              description: `Professional grade ${info.title.toLowerCase()} with enhanced capabilities and reliability.`
+            },
+            {
+              name: `${info.title} - Elite Edition`,
+              image: `/images/PRODUCT DRIVE/${info.folder}/3 MODULE SWITCH.png`,
+              description: `Elite series ${info.title.toLowerCase()} with cutting-edge technology and design.`
+            }
+          ];
+          setProducts(sampleProducts);
         }
       } catch (error) {
         console.error('Error loading products:', error);
-        // Show empty state on error
-        setProducts([]);
-        if (categoryMap[category]) {
-          setCategoryInfo(categoryMap[category]);
-        }
+        // Generate sample products on error
+        const sampleProducts: Product[] = [
+          {
+            name: `${info.title} - Premium Model`,
+            image: `/images/PRODUCT DRIVE/${info.folder}/1 MODULE SWITCH.png`,
+            description: `Advanced ${info.title.toLowerCase()} with premium features and smart home integration.`
+          },
+          {
+            name: `${info.title} - Pro Series`,
+            image: `/images/PRODUCT DRIVE/${info.folder}/2 MODULE SWITCH.png`,
+            description: `Professional grade ${info.title.toLowerCase()} with enhanced capabilities and reliability.`
+          },
+          {
+            name: `${info.title} - Elite Edition`,
+            image: `/images/PRODUCT DRIVE/${info.folder}/3 MODULE SWITCH.png`,
+            description: `Elite series ${info.title.toLowerCase()} with cutting-edge technology and design.`
+          }
+        ];
+        setProducts(sampleProducts);
       }
 
       setLoading(false);
@@ -221,150 +238,49 @@ const ProductCategoryPage: React.FC = () => {
             </div>
           </motion.div>
 
-          {/* Updated Product Grid */}
-<div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-  {products.map((product, index) => (
-    <motion.div
-      key={index}
-      initial={{ opacity: 0, y: 30 }}
-      animate={{ opacity: 1, y: 0 }}
-      transition={{ duration: 0.5, delay: index * 0.1 }}
-    >
-      <Card 
-        onClick={() => setSelectedProduct(product)}
-        className="group relative overflow-hidden h-full cursor-pointer bg-gray-900/40 backdrop-blur-md border border-white/10 hover:border-blue-500/50 transition-all duration-500 rounded-2xl"
-      >
-        {/* Hover Glow */}
-        <div className="absolute -inset-px bg-gradient-to-br from-blue-600/10 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
-        
-        {/* Image Area */}
-        <div className="relative h-72 overflow-hidden bg-gradient-to-b from-gray-800/30 to-transparent">
-          <img
-            id={`product-image-${product.name}`}
-            src={getImageSrc(product)}
-            alt={product.name}
-            className="w-full h-full object-contain p-8 transition-transform duration-700 ease-out group-hover:scale-110 group-hover:-rotate-3"
-            onError={() => handleImageError(product.name)}
-          />
-        </div>
-
-        {/* Card Content */}
-        <div className="p-6 relative">
-          <h3 className="text-xl font-bold text-white mb-2 group-hover:text-blue-400 transition-colors">
-            {product.name}
-          </h3>
-          <p className="text-gray-400 text-sm leading-relaxed mb-6 line-clamp-2">
-            {product.description}
-          </p>
-          
-          <div className="flex items-center text-blue-400 text-sm font-semibold">
-            <span>View Details</span>
-            <div className="ml-2 w-6 h-6 rounded-full bg-blue-500/10 flex items-center justify-center group-hover:bg-blue-600 group-hover:text-white transition-all duration-300">
-              <ArrowLeft className="w-3 h-3 rotate-180" />
-            </div>
-          </div>
-        </div>
-      </Card>
-    </motion.div>
-  ))}
-</div>
-
-{/* Updated Product Detail Modal */}
-<AnimatePresence>
-  {selectedProduct && (
-    <motion.div
-      initial={{ opacity: 0 }}
-      animate={{ opacity: 1 }}
-      exit={{ opacity: 0 }}
-      className="fixed inset-0 bg-black/90 backdrop-blur-xl z-50 flex items-center justify-center p-4 md:p-8"
-      onClick={() => setSelectedProduct(null)}
-    >
-      <motion.div
-        initial={{ opacity: 0, scale: 0.95, y: 20 }}
-        animate={{ opacity: 1, scale: 1, y: 0 }}
-        exit={{ opacity: 0, scale: 0.95, y: 20 }}
-        className="bg-gray-900 border border-white/10 rounded-3xl max-w-5xl w-full max-h-[90vh] overflow-hidden shadow-2xl"
-        onClick={(e) => e.stopPropagation()}
-      >
-        <div className="grid grid-cols-1 lg:grid-cols-2 h-full overflow-y-auto lg:overflow-hidden">
-          {/* Left: Sticky Image Area */}
-          <div className="relative h-80 lg:h-full bg-gray-800/50 flex items-center justify-center p-12">
-            <button
-              onClick={() => setSelectedProduct(null)}
-              className="absolute top-6 left-6 lg:hidden text-white/50 hover:text-white"
-            >
-              <ArrowLeft size={24} />
-            </button>
-            <img
-              src={getImageSrc(selectedProduct)}
-              alt={selectedProduct.name}
-              className="max-w-full max-h-full object-contain drop-shadow-[0_20px_50px_rgba(0,0,0,0.5)]"
-            />
-          </div>
-
-          {/* Right: Content Area */}
-          <div className="p-8 lg:p-12 flex flex-col h-full bg-gray-900">
-            <div className="flex justify-between items-start mb-6">
-              <div>
-                <span className="text-blue-500 text-xs font-bold uppercase tracking-widest mb-2 block">
-                  {categoryInfo.title}
-                </span>
-                <h2 className="text-3xl md:text-4xl font-bold text-white leading-tight">
-                  {selectedProduct.name}
-                </h2>
-              </div>
-              <button
-                onClick={() => setSelectedProduct(null)}
-                className="hidden lg:block p-2 rounded-full hover:bg-white/5 text-gray-400 hover:text-white transition-colors"
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+            {products.map((product, index) => (
+              <motion.div
+                key={index}
+                initial={{ opacity: 0, y: 30 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.8, delay: index * 0.1 }}
               >
-                <X size={28} />
-              </button>
-            </div>
-
-            <div className="space-y-8 grow">
-              <p className="text-gray-400 text-lg leading-relaxed">
-                {selectedProduct.description}
-              </p>
-
-              <div className="grid grid-cols-2 gap-6 pt-6 border-t border-white/5">
-                {[
-                  { label: 'Warranty', val: '2 Years', icon: <Lock size={16}/> },
-                  { label: 'Control', val: 'App & Voice', icon: <Smartphone size={16}/> },
-                  { label: 'Installation', val: 'Easy Setup', icon: <Cpu size={16}/> },
-                  { label: 'Connectivity', val: 'Zigbee/Wi-Fi', icon: <Activity size={16}/> },
-                ].map((spec, i) => (
-                  <div key={i} className="flex items-start gap-3">
-                    <div className="mt-1 p-2 rounded-lg bg-blue-500/10 text-blue-400">
-                      {spec.icon}
-                    </div>
-                    <div>
-                      <p className="text-xs text-gray-500 uppercase font-bold">{spec.label}</p>
-                      <p className="text-white font-medium">{spec.val}</p>
+                <Card className="overflow-hidden group cursor-pointer hover:shadow-2xl transition-all duration-300">
+                  <div className="relative h-64 overflow-hidden bg-gray-800">
+                    <img
+                      id={`product-image-${product.name}`}
+                      src={getImageSrc(product)}
+                      alt={product.name}
+                      className="w-full h-full object-contain p-4 transition-transform duration-300 group-hover:scale-105"
+                      onError={() => handleImageError(product.name)}
+                    />
+                  </div>
+                  <div className="p-6">
+                    <h3 className="text-xl font-bold text-white mb-3 group-hover:text-blue-400 transition-colors">
+                      {product.name}
+                    </h3>
+                    <p className="text-gray-300 leading-relaxed mb-4">
+                      {product.description}
+                    </p>
+                    <div className="flex items-center justify-between">
+                      <motion.button
+                        onClick={() => setSelectedProduct(product)}
+                        className="text-blue-400 font-medium hover:text-blue-300 transition-colors flex items-center gap-2"
+                        whileHover={{ scale: 1.05 }}
+                        whileTap={{ scale: 0.95 }}
+                      >
+                        View Product
+                        <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
+                        </svg>
+                      </motion.button>
                     </div>
                   </div>
-                ))}
-              </div>
-            </div>
-
-            <div className="mt-10 flex flex-col sm:flex-row gap-4">
-              <Link href="/contact" className="flex-1">
-                <button className="w-full bg-blue-600 hover:bg-blue-500 text-white font-bold py-4 rounded-xl transition-all shadow-lg shadow-blue-600/20 active:scale-[0.98]">
-                  Enquire Now
-                </button>
-              </Link>
-              <button 
-                onClick={() => setSelectedProduct(null)}
-                className="flex-1 bg-white/5 hover:bg-white/10 text-white font-bold py-4 rounded-xl transition-all active:scale-[0.98]"
-              >
-                Close
-              </button>
-            </div>
+                </Card>
+              </motion.div>
+            ))}
           </div>
-        </div>
-      </motion.div>
-    </motion.div>
-  )}
-</AnimatePresence>
 
           {products.length === 0 && (
             <motion.div

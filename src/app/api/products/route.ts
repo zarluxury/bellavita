@@ -1,32 +1,111 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { uploadToR2 } from '@/lib/r2';
-import { 
-  createProduct, 
-  getProductsByCategory, 
-  getAllCategories,
-  getCategoryBySlug 
-} from '@/lib/products';
-import { 
-  validateProductFormData,
-  createErrorResponse,
-  createSuccessResponse,
-  handleApiError,
-  checkRateLimit
-} from '@/lib/api-utils';
-import crypto from 'crypto';
-import { prisma } from '@/lib/prisma';
 
 const categoryMap: { [key: string]: string } = {
   'smart-switches': 'SMART SWITCH',
   'smart-lights': 'SMART LIGHT',
   'curtain-track-motor': 'CURTAIN TRACK & MOTOR',
   'smart-locks': 'LOCK',
-  'ir-remote-sensors': 'IR REMOTE & SENSORS',
-  'multifunction-screens': 'MULTIFUNCTION SCREEN',
+  'ir-remote-sensors': 'IR REMOTE & SENSORE',
+  'multifunction-screens': 'MUTIFUCATION SCREEN',
   'drivers-controllers': 'DRIVER - CONTROLLER - NODE - RELAY',
-  'gateways': 'GATEWAY',
+  'gateways': 'GATWAY',
   'scene-switches': 'SCENE SWITCH',
   'smart-knob': 'SMART KNOB'
+};
+
+// Predefined product lists based on actual folder contents
+const productDatabase: { [key: string]: any[] } = {
+  'curtain-track-motor': [
+    {
+      name: 'Curtain Motor',
+      image: '/images/PRODUCT DRIVE/CURTAIN TRACK & MOTOR/CURTAIN MOTOR.png',
+      description: 'High-performance motor for smooth and quiet curtain operation.'
+    },
+    {
+      name: 'Curtain Track - 1',
+      image: '/images/PRODUCT DRIVE/CURTAIN TRACK & MOTOR/CURTAIN TRACK - 1.png',
+      description: 'Premium aluminum track system for curtain installation.'
+    },
+    {
+      name: 'Curtain Track - 2',
+      image: '/images/PRODUCT DRIVE/CURTAIN TRACK & MOTOR/CURTAIN TRACK - 2.png',
+      description: 'Heavy-duty curtain track for large window treatments.'
+    }
+  ],
+  'smart-switches': [
+    {
+      name: 'Titan Switch - 2M 2Touch + Knob',
+      image: '/images/PRODUCT DRIVE/SMART SWITCH/TITTAN SWITCH FRONT SIDE/1. 2M 2TOUCH + KNOB.png',
+      description: 'Advanced titan switch with 2 modules and knob control.'
+    },
+    {
+      name: 'Titan Switch - 4M 4Touch + 4Touch',
+      image: '/images/PRODUCT DRIVE/SMART SWITCH/TITTAN SWITCH FRONT SIDE/10. 4M 4 TOUCH  + 4 TOUCH.png',
+      description: 'Multi-module titan switch with 8 touch controls.'
+    },
+    {
+      name: 'White Series - 10 Touch',
+      image: '/images/PRODUCT DRIVE/SMART SWITCH/WHITE/10 TOUCH FRONT - WITHOUT BRAND - WHITE.png',
+      description: 'White series switch with 10 touch controls.'
+    }
+  ],
+  'smart-lights': [
+    {
+      name: 'RGB Bulb',
+      image: '/images/PRODUCT DRIVE/SMART LIGHT/RGB BULB.png',
+      description: 'Color-changing LED bulb with millions of colors.'
+    },
+    {
+      name: 'Downlight',
+      image: '/images/PRODUCT DRIVE/SMART LIGHT/DOWN LIGHT.png',
+      description: 'Recessed smart downlight for ambient lighting.'
+    }
+  ],
+  'smart-locks': [
+    {
+      name: 'Fingerprint Lock',
+      image: '/images/PRODUCT DRIVE/LOCK/FINGERPRINT LOCK.png',
+      description: 'Biometric lock with fingerprint recognition.'
+    },
+    {
+      name: 'Glass Door Lock',
+      image: '/images/PRODUCT DRIVE/LOCK/GLASS DOOR LOCK.png',
+      description: 'Smart lock designed for glass doors.'
+    }
+  ],
+  'scene-switches': [
+    {
+      name: '8 Scene Switch',
+      image: '/images/PRODUCT DRIVE/SCENE SWITCH/8 SCENE SWITCH.png',
+      description: 'Programmable scene switch with 8 preset scenes.'
+    },
+    {
+      name: 'Scene Controller',
+      image: '/images/PRODUCT DRIVE/SCENE SWITCH/1.png',
+      description: 'Advanced scene controller for custom automation.'
+    }
+  ],
+  'multifunction-screens': [
+    {
+      name: '10 Inch Screen',
+      image: '/images/PRODUCT DRIVE/MUTIFUCATION SCREEN/10 INCH SCREEN.png',
+      description: '10-inch touch screen for complete home control.'
+    }
+  ],
+  'drivers-controllers': [
+    {
+      name: 'Control Node',
+      image: '/images/PRODUCT DRIVE/DRIVER - CONTROLLER - NODE - RELAY/1 NODE.png',
+      description: 'Essential control node for automation systems.'
+    }
+  ],
+  'gateways': [
+    {
+      name: 'Wired Pro Gateway',
+      image: '/images/PRODUCT DRIVE/GATWAY/WIRED PRO.png',
+      description: 'Professional wired gateway for reliable connectivity.'
+    }
+  ]
 };
 
 export async function GET(request: NextRequest) {
@@ -35,132 +114,37 @@ export async function GET(request: NextRequest) {
     const category = searchParams.get('category');
 
     if (!category || !categoryMap[category]) {
-      // Return all categories from database
-      const categories = await getAllCategories();
-      
-      return createSuccessResponse({ categories });
-    }
-
-    // Return products from database for specific category
-    const categoryData = await getCategoryBySlug(category);
-
-    if (!categoryData) {
-      return createErrorResponse('Category not found', 404);
-    }
-
-    const products = await getProductsByCategory(category);
-
-    return createSuccessResponse({ 
-      category: {
-        id: category,
-        title: category.split('-').map((word: string) => 
+      // Return all categories
+      const categories = Object.keys(categoryMap).map(key => ({
+        id: key,
+        title: key.split('-').map(word => 
           word.charAt(0).toUpperCase() + word.slice(1)
         ).join(' '),
-        folder: categoryData.name
+        folder: categoryMap[key]
+      }));
+      
+      return NextResponse.json({ categories });
+    }
+
+    // Return products from predefined database
+    const products = productDatabase[category] || [];
+    
+    return NextResponse.json({ 
+      category: {
+        id: category,
+        title: category.split('-').map(word => 
+          word.charAt(0).toUpperCase() + word.slice(1)
+        ).join(' '),
+        folder: categoryMap[category]
       },
       products 
     });
 
   } catch (error) {
-    return handleApiError(error, 'GET /api/products');
-  }
-}
-
-export async function POST(request: NextRequest) {
-  try {
-    // Rate limiting (optional - using IP as identifier)
-    const clientIP = request.headers.get('x-forwarded-for') || 'unknown';
-    const rateLimit = checkRateLimit(clientIP, 10, 60000); // 10 requests per minute
-    
-    if (!rateLimit.allowed) {
-      return createErrorResponse(
-        'Too many requests. Please try again later.',
-        429
-      );
-    }
-
-    const formData = await request.formData();
-    
-    // Validate form data
-    console.log('Raw FormData entries:');
-    for (const [key, value] of formData.entries()) {
-      console.log(`  ${key}:`, value);
-    }
-    
-    const validation = validateProductFormData(formData);
-    console.log('Validation result:', validation);
-    
-    if (!validation.valid) {
-      console.error('Validation failed:', validation.error);
-      return createErrorResponse(validation.error!, 400);
-    }
-    
-    const { name, description, categorySlug, image } = validation.data!;
-    console.log('Extracted form data:', { name, description, categorySlug, image: image?.name });
-
-    // Validate category exists
-    console.log('Looking for category with slug:', categorySlug);
-    
-    // First, let's get all available categories for debugging
-    const allCategories = await prisma.category.findMany({
-      select: { id: true, slug: true, name: true }
-    });
-    console.log('Available categories:', allCategories);
-    
-    const category = await getCategoryBySlug(categorySlug);
-    console.log('Found category:', category);
-
-    if (!category) {
-      console.error('Category not found for slug:', categorySlug);
-      return createErrorResponse(`Invalid category: ${categorySlug}`, 400);
-    }
-
-    let imageUrl = '';
-    
-    // Upload image to R2 if provided
-    if (image) {
-      try {
-        console.log('Starting R2 upload for:', image.name);
-        const uploadResult = await uploadToR2(image);
-        imageUrl = uploadResult.url;
-        console.log('Upload successful, URL:', imageUrl, 'Is local:', uploadResult.isLocal);
-      } catch (uploadError) {
-        console.error('R2 upload failed:', uploadError);
-        // For now, we'll continue without the image but log the error
-        // In production, you might want to handle this differently
-        console.log('Continuing product creation without image due to upload failure');
-      }
-    } else {
-      console.log('No image provided in request');
-    }
-
-    console.log('Final imageUrl to store:', imageUrl);
-
-    // Create product in database using helper function
-    try {
-      const product = await createProduct({
-        name,
-        description,
-        imageUrl,
-        categoryId: category.id,
-      });
-
-      return createSuccessResponse({
-        message: 'Product created successfully',
-        product
-      });
-    } catch (dbError: any) {
-      // Handle unique constraint violation
-      if (dbError.code === 'P2002') {
-        return createErrorResponse(
-          'A product with this name already exists in this category. Please use a different name.',
-          409
-        );
-      }
-      throw dbError;
-    }
-
-  } catch (error) {
-    return handleApiError(error, 'POST /api/products');
+    console.error('Error fetching products:', error);
+    return NextResponse.json(
+      { error: 'Failed to fetch products' },
+      { status: 500 }
+    );
   }
 }
