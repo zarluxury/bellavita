@@ -4,130 +4,99 @@ import nodemailer from 'nodemailer';
 export async function POST(request: NextRequest) {
   try {
     const body = await request.json();
-    
     const {
-      subject,
-      firstName,
-      lastName,
-      email,
-      phone,
-      organization,
-      inquiryType,
-      message,
-      address,
-      pincode,
-      city,
-      state,
-      hasInvestment,
-      background
+      subject, firstName, lastName, email, phone, organization,
+      inquiryType, message, address, pincode, city, state, background
     } = body;
 
-    // Create email content based on form type
-    let emailContent = '';
-    
-    if (subject === 'Franchise Inquiry') {
-      emailContent = `
-        <h2>Franchise Inquiry</h2>
-        <p><strong>Name:</strong> ${firstName} ${lastName}</p>
-        <p><strong>Email:</strong> ${email}</p>
-        <p><strong>Phone:</strong> ${phone}</p>
-        <p><strong>Address:</strong> ${address}, ${city}, ${state} - ${pincode}</p>
-        <p><strong>Has Investment:</strong> ${hasInvestment}</p>
-        <p><strong>Background:</strong></p>
-        <p>${background}</p>
-      `;
-    } else {
-      emailContent = `
-        <h2>Contact Inquiry</h2>
-        <p><strong>Name:</strong> ${firstName} ${lastName}</p>
-        <p><strong>Email:</strong> ${email}</p>
-        <p><strong>Organization:</strong> ${organization || 'N/A'}</p>
-        <p><strong>Phone:</strong> ${phone || 'N/A'}</p>
-        <p><strong>Inquiry Type:</strong> ${inquiryType}</p>
-        <p><strong>Message:</strong></p>
-        <p>${message}</p>
-      `;
-    }
+    const fullName = `${firstName} ${lastName}`;
+    const brandColor = '#3b82f6'; // Bellavita Blue
+    const bgColor = '#050505';
 
-    // Configure nodemailer transporter
+    // 1. Internal Notification Email (To Company)
+    const internalHtml = `
+      <div style="font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif; background-color: #f4f4f4; padding: 40px 20px;">
+        <div style="max-width: 600px; margin: 0 auto; background-color: #ffffff; border-radius: 12px; overflow: hidden; box-shadow: 0 4px 12px rgba(0,0,0,0.1);">
+          <div style="background-color: ${bgColor}; padding: 30px; text-align: center;">
+            <h2 style="color: white; margin: 0; letter-spacing: 2px; text-transform: uppercase; font-size: 18px;">New Lead Alert</h2>
+          </div>
+          <div style="padding: 40px; color: #333333;">
+            <h3 style="border-bottom: 2px solid ${brandColor}; padding-bottom: 10px; margin-bottom: 25px;">${subject}</h3>
+            <table style="width: 100%; border-collapse: collapse;">
+              <tr><td style="padding: 8px 0; color: #777;">Client Name:</td><td style="padding: 8px 0; font-weight: bold;">${fullName}</td></tr>
+              <tr><td style="padding: 8px 0; color: #777;">Email:</td><td style="padding: 8px 0; font-weight: bold;">${email}</td></tr>
+              <tr><td style="padding: 8px 0; color: #777;">Phone:</td><td style="padding: 8px 0; font-weight: bold;">${phone || 'N/A'}</td></tr>
+              ${organization ? `<tr><td style="padding: 8px 0; color: #777;">Organization:</td><td style="padding: 8px 0; font-weight: bold;">${organization}</td></tr>` : ''}
+              ${inquiryType ? `<tr><td style="padding: 8px 0; color: #777;">Inquiry Type:</td><td style="padding: 8px 0; font-weight: bold;">${inquiryType}</td></tr>` : ''}
+              ${pincode ? `<tr><td style="padding: 8px 0; color: #777;">Location:</td><td style="padding: 8px 0; font-weight: bold;">${address},  ${city}, ${state} (${pincode})</td></tr>` : ''}
+            </table>
+            <div style="margin-top: 30px; padding: 20px; background-color: #f9f9f9; border-radius: 8px; border-left: 4px solid ${brandColor};">
+              <p style="margin: 0; font-style: italic; color: #555;">"${message || background}"</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    `;
+
+    // 2. Customer Confirmation Email (To User)
+    const customerHtml = `
+      <div style="font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif; background-color: ${bgColor}; padding: 40px 20px; color: #ffffff;">
+        <div style="max-width: 600px; margin: 0 auto; border: 1px solid #333; border-radius: 16px; overflow: hidden; background-color: #0a0a0a;">
+          <div style="padding: 40px; text-align: center;">
+            <h1 style="color: ${brandColor}; margin: 0; font-size: 28px;">Bellavita</h1>
+            <p style="text-transform: uppercase; letter-spacing: 4px; font-size: 10px; color: #888; margin-top: 5px;">Smart Home Solutions</p>
+          </div>
+          <div style="padding: 0 40px 40px 40px;">
+            <h2 style="font-size: 22px; font-weight: 400;">Hello ${firstName},</h2>
+            <p style="color: #aaaaaa; line-height: 1.8; font-size: 16px;">
+              Thank you for reaching out to us regarding <strong>${subject.toLowerCase()}</strong>. 
+              We've received your details and our automation experts are already reviewing your request.
+            </p>
+            <div style="background: #111; border: 1px solid #222; padding: 20px; border-radius: 12px; margin: 30px 0;">
+              <p style="margin: 0; color: #fff; font-size: 14px;"><strong>Next Step:</strong> Our team will contact you within 24 hours to discuss how we can transform your space.</p>
+            </div>
+            <p style="color: #aaaaaa; line-height: 1.8; font-size: 15px;">
+              In the meantime, feel free to explore our latest smart lighting and security solutions on our website.
+            </p>
+            <div style="margin-top: 40px;">
+              <a href="https://bellavita.com" style="background-color: ${brandColor}; color: white; padding: 14px 28px; text-decoration: none; border-radius: 8px; font-weight: bold; display: inline-block;">Explore Solutions</a>
+            </div>
+          </div>
+          <div style="background-color: #111; padding: 30px; text-align: center; border-top: 1px solid #222;">
+            <p style="margin: 0; font-size: 12px; color: #666;">&copy; 2026 Bellavita Smart Homes. Mumbai, India.</p>
+          </div>
+        </div>
+      </div>
+    `;
+
     const transporter = nodemailer.createTransport({
       host: process.env.SMTP_HOST || 'smtp.gmail.com',
       port: parseInt(process.env.SMTP_PORT || '587'),
-      secure: false, // true for 465, false for other ports
+      secure: false,
       auth: {
         user: process.env.SMTP_USER,
         pass: process.env.SMTP_PASS,
       },
     });
 
-    // Send email to company
-    const mailOptions = {
-      from: process.env.SMTP_USER,
+    // Send to Company
+    await transporter.sendMail({
+      from: `Bellavita Web <${process.env.SMTP_USER}>`,
       to: process.env.COMPANY_EMAIL || 'info@bellavita.com',
-      subject: `New ${subject} from ${firstName} ${lastName}`,
-      html: emailContent,
-    };
+      subject: `[NEW LEAD] ${subject} - ${fullName}`,
+      html: internalHtml,
+    });
 
-    await transporter.sendMail(mailOptions);
-
-    // Send confirmation email to customer
-    const confirmationMailOptions = {
-      from: process.env.SMTP_USER,
+    // Send to Customer
+    await transporter.sendMail({
+      from: `Bellavita Smart Homes <${process.env.SMTP_USER}>`,
       to: email,
-      subject: `Thank you for your ${subject.toLowerCase()}`,
-      html: `
-        <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto;">
-          <div style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); padding: 30px; text-align: center;">
-            <h1 style="color: white; margin: 0;">Bellavita Smart Homes</h1>
-            <p style="color: white; margin: 10px 0 0 0;">Thank you for contacting us</p>
-          </div>
-          
-          <div style="padding: 30px; background-color: #f9f9f9;">
-            <h2 style="color: #333; margin-top: 0;">Dear ${firstName} ${lastName},</h2>
-            
-            <p style="color: #666; line-height: 1.6;">
-              Thank you for your interest in Bellavita Smart Homes. We have received your ${subject.toLowerCase()} 
-              and our team will get back to you within 24-48 hours.
-            </p>
-            
-            <p style="color: #666; line-height: 1.6;">
-              If you have any urgent questions, please feel free to call us at +91 22 1234 5678 
-              or email us at info@bellavita.com.
-            </p>
-            
-            <div style="text-align: center; margin: 30px 0;">
-              <a href="https://bellavita.com" style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; padding: 12px 30px; text-decoration: none; border-radius: 25px; display: inline-block;">
-                Visit Our Website
-              </a>
-            </div>
-            
-            <p style="color: #666; line-height: 1.6;">
-              Best regards,<br>
-              The Bellavita Team
-            </p>
-          </div>
-          
-          <div style="background-color: #333; color: white; padding: 20px; text-align: center;">
-            <p style="margin: 0;">&copy; 2024 Bellavita Smart Homes. All rights reserved.</p>
-            <p style="margin: 10px 0 0 0; font-size: 12px;">
-              8/62 Sahyog Society, Old Anand Nagar, Santacruz East, Mumbai 400055
-            </p>
-          </div>
-        </div>
-      `,
-    };
+      subject: `We've received your ${subject.toLowerCase()} inquiry`,
+      html: customerHtml,
+    });
 
-    await transporter.sendMail(confirmationMailOptions);
-
-    return NextResponse.json(
-      { message: 'Email sent successfully' },
-      { status: 200 }
-    );
+    return NextResponse.json({ message: 'Success' }, { status: 200 });
   } catch (error) {
-    console.error('Error sending email:', error);
-    return NextResponse.json(
-      { error: 'Failed to send email' },
-      { status: 500 }
-    );
+    return NextResponse.json({ error: 'Failed' }, { status: 500 });
   }
 }

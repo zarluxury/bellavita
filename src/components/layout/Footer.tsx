@@ -39,13 +39,13 @@ const Footer: React.FC = () => {
             </div>
 
             <div className="flex space-x-4">
-              <a href="#" className="text-gray-400 hover:text-white transition-colors">
+              <a href="https://www.instagram.com/bellavitasmarthome/" className="text-gray-400 hover:text-white transition-colors">
                 <Instagram size={20} />
               </a>
-              <a href="#" className="text-gray-400 hover:text-white transition-colors">
+              <a href="https://www.facebook.com/people/BellaVita-Smart-Home/61571472372164/#" className="text-gray-400 hover:text-white transition-colors">
                 <Facebook size={20} />
               </a>
-              <a href="#" className="text-gray-400 hover:text-white transition-colors">
+              <a href="https://in.linkedin.com/company/bellavita-smart-home" className="text-gray-400 hover:text-white transition-colors">
                 <Linkedin size={20} />
               </a>
             </div>
@@ -84,11 +84,11 @@ const Footer: React.FC = () => {
               </div>
               <div className="flex items-center space-x-3">
                 <Mail size={16} className="text-blue-400" />
-                <span className="text-gray-400 text-sm">info@bellavita.com</span>
+                <span className="text-gray-400 text-sm">info@bellavitasmarthome.com</span>
               </div>
               <div className="flex items-center space-x-3">
                 <Phone size={16} className="text-blue-400" />
-                <span className="text-gray-400 text-sm">+91 22 1234 5678</span>
+                <span className="text-gray-400 text-sm">+91 81047 70438</span>
               </div>
             </div>
           </motion.div>

@@ -8,7 +8,6 @@ import Button from '../ui/Button';
 
 const Navbar: React.FC = () => {
   const [isOpen, setIsOpen] = useState(false);
-  const [isDropdownOpen, setIsDropdownOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
 
   useEffect(() => {
@@ -19,17 +18,6 @@ const Navbar: React.FC = () => {
     return () => window.removeEventListener('scroll', handleScroll);
   }, []);
 
-  const solutions = [
-    'Smart Lights',
-    'Automation',
-    'Curtains',
-    'Smart Security',
-    'Audio / Video',
-    'Smart Building Solutions',
-    'Office Solutions',
-    'Hotel Solutions',
-    '24x7 Monitoring'
-  ];
 
   return (
     <motion.nav
@@ -65,41 +53,12 @@ const Navbar: React.FC = () => {
             <div className="relative">
               <motion.button
                 whileHover={{ scale: 1.05 }}
-                onMouseEnter={() => setIsDropdownOpen(true)}
-                onMouseLeave={() => setIsDropdownOpen(false)}
-                className="flex items-center text-white hover:text-blue-400 transition-colors"
+                className="flex items-center text-white hover:text-blue-400 hover:cursor-pointer transition-colors"
               >
                 SOLUTIONS
-                <ChevronDown className="ml-1 h-4 w-4" />
               </motion.button>
               
-              <AnimatePresence>
-                {isDropdownOpen && (
-                  <motion.div
-                    initial={{ opacity: 0, y: -10 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    exit={{ opacity: 0, y: -10 }}
-                    onMouseEnter={() => setIsDropdownOpen(true)}
-                    onMouseLeave={() => setIsDropdownOpen(false)}
-                    className="absolute top-full left-0 mt-2 w-64 bg-black/90 backdrop-blur-lg rounded-lg border border-white/20"
-                  >
-                    {solutions.map((item, index) => (
-                      <motion.div
-                        key={index}
-                        whileHover={{ x: 5 }}
-                        transition={{ type: "spring", stiffness: 300 }}
-                      >
-                        <Link
-                          href={`/solutions#${item.toLowerCase().replace(/\s+/g, '-')}`}
-                          className="block px-4 py-3 text-white hover:bg-white/10 transition-colors first:rounded-t-lg last:rounded-b-lg"
-                        >
-                          {item}
-                        </Link>
-                      </motion.div>
-                    ))}
-                  </motion.div>
-                )}
-              </AnimatePresence>
+
             </div>
 
             <motion.div whileHover={{ scale: 1.05 }}>
@@ -121,7 +80,7 @@ const Navbar: React.FC = () => {
             whileTap={{ scale: 0.95 }}
           >
             <Link href="/contact">
-              <Button size="sm">CONTACT US</Button>
+              <Button size="sm" className='cursor-pointer'>CONTACT US</Button>
             </Link>
           </motion.div>
 

@@ -27,7 +27,6 @@ const FranchisePage: React.FC = () => {
     pincode: '',
     city: '',
     state: '',
-    hasInvestment: '',
     background: ''
   });
 
@@ -89,7 +88,7 @@ const FranchisePage: React.FC = () => {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    
+    setIsSubmitted(true);
     try {
       const response = await fetch('/api/sendEmail', {
         method: 'POST',
@@ -103,7 +102,7 @@ const FranchisePage: React.FC = () => {
       });
 
       if (response.ok) {
-        setIsSubmitted(true);
+        
         setFormData({
           firstName: '',
           lastName: '',
@@ -113,12 +112,14 @@ const FranchisePage: React.FC = () => {
           pincode: '',
           city: '',
           state: '',
-          hasInvestment: '',
           background: ''
         });
       }
     } catch (error) {
       console.error('Error submitting form:', error);
+      
+    }finally{
+      setIsSubmitted(false);
     }
   };
 
@@ -337,22 +338,7 @@ const FranchisePage: React.FC = () => {
                   </div>
                 </div>
 
-                <div>
-                  <label className="block text-white mb-2">
-                    Do you have 20% of the Initial Investment range of INR 10,00,000 to INR 25,00,000 liquid? *
-                  </label>
-                  <select
-                    name="hasInvestment"
-                    value={formData.hasInvestment}
-                    onChange={handleInputChange}
-                    required
-                    className="w-full px-4 py-3 bg-white/10 border border-white/20 rounded-lg text-white focus:outline-none focus:border-blue-400"
-                  >
-                    <option value="">Select an option</option>
-                    <option value="yes">Yes</option>
-                    <option value="no">No</option>
-                  </select>
-                </div>
+
 
                 <div>
                   <label className="block text-white mb-2">Tell us about your background *</label>
@@ -368,8 +354,13 @@ const FranchisePage: React.FC = () => {
                 </div>
 
                 <div className="text-center">
-                  <Button type="submit" size="lg" className="px-12">
-                    Submit Application
+                  <Button 
+                    type="submit" 
+                    size="lg" 
+                    className="px-12"
+                    disabled={isSubmitted}
+                  >
+                    {isSubmitted ? "Submitting..." : "Submit Application"}
                   </Button>
                 </div>
               </form>

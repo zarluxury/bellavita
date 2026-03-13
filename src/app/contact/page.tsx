@@ -20,6 +20,7 @@ const ContactPage: React.FC = () => {
     firstName: '',
     lastName: '',
     email: '',
+    phone:'',
     organization: '',
     inquiryType: '',
     message: ''
@@ -31,13 +32,13 @@ const ContactPage: React.FC = () => {
     {
       icon: <Phone className="w-6 h-6" />,
       title: 'Phone',
-      content: '+91 22 1234 5678',
+      content: '+91 81047 70438',
       description: 'Mon-Sat 9AM-7PM'
     },
     {
       icon: <Mail className="w-6 h-6" />,
       title: 'Email',
-      content: 'info@bellavita.com',
+      content: 'info@bellavitasmarthome.com',
       description: 'We respond within 24 hours'
     },
     {
@@ -74,6 +75,7 @@ const ContactPage: React.FC = () => {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    setIsSubmitted(true);
     
     try {
       const response = await fetch('/api/sendEmail', {
@@ -88,11 +90,11 @@ const ContactPage: React.FC = () => {
       });
 
       if (response.ok) {
-        setIsSubmitted(true);
         setFormData({
           firstName: '',
           lastName: '',
           email: '',
+          phone:'',
           organization: '',
           inquiryType: '',
           message: ''
@@ -100,6 +102,8 @@ const ContactPage: React.FC = () => {
       }
     } catch (error) {
       console.error('Error submitting form:', error);
+    } finally {
+      setIsSubmitted(false);
     }
   };
 
@@ -201,6 +205,18 @@ const ContactPage: React.FC = () => {
                       placeholder="Enter your email"
                     />
                   </div>
+                  <div>
+                    <label className="block text-white mb-2">Phone *</label>
+                    <input
+                      type="tel"
+                      name="phone"
+                      value={formData.phone}
+                      onChange={handleInputChange}
+                      required
+                      className="w-full px-4 py-3 bg-white/10 border border-white/20 rounded-lg text-white placeholder-gray-400 focus:outline-none focus:border-blue-400"
+                      placeholder="Enter your phone number"
+                    />
+                  </div>
 
                   <div>
                     <label className="block text-white mb-2">Organization</label>
@@ -223,9 +239,9 @@ const ContactPage: React.FC = () => {
                       required
                       className="w-full px-4 py-3 bg-white/10 border border-white/20 rounded-lg text-white focus:outline-none focus:border-blue-400"
                     >
-                      <option value="">Select inquiry type</option>
+                      <option value="" className='text-black'>Select inquiry type</option>
                       {inquiryTypes.map((type) => (
-                        <option key={type} value={type}>
+                        <option key={type} value={type} className='text-black'>
                           {type}
                         </option>
                       ))}
@@ -245,9 +261,13 @@ const ContactPage: React.FC = () => {
                     />
                   </div>
 
-                  <Button type="submit" className="w-full flex items-center justify-center">
+                  <Button 
+                    type="submit" 
+                    className="w-full flex items-center justify-center"
+                    disabled={isSubmitted}
+                  >
                     <Send className="w-5 h-5 mr-2" />
-                    Send Message
+                    {isSubmitted ? "Sending..." : "Send Message"}
                   </Button>
                 </form>
               </Card>
@@ -313,25 +333,6 @@ const ContactPage: React.FC = () => {
             </motion.div>
           </div>
 
-          <motion.div
-            initial={{ opacity: 0, y: 30 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.8, delay: 0.6 }}
-            className="mt-20"
-          >
-            <div className="bg-linear-to-r from-blue-600 to-purple-600 rounded-2xl p-12 text-center">
-              <h2 className="text-3xl font-bold text-white mb-6">
-                Ready to Transform Your Home?
-              </h2>
-              <p className="text-white/90 text-lg mb-8 max-w-2xl mx-auto">
-                Schedule a free consultation with our experts to explore how smart home 
-                automation can enhance your lifestyle.
-              </p>
-              <Button size="lg" className="bg-white text-black hover:bg-gray-100">
-                Schedule Free Consultation
-              </Button>
-            </div>
-          </motion.div>
         </div>
       </section>
 

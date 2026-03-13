@@ -4,195 +4,141 @@ import React from 'react';
 import { motion } from 'framer-motion';
 import Navbar from '@/components/layout/Navbar';
 import Footer from '@/components/layout/Footer';
-import Card from '@/components/ui/Card';
-import { Users, Award, Target, Lightbulb } from 'lucide-react';
+import { Users, Award, Target, Lightbulb, CheckCircle2, MoveRight } from 'lucide-react';
+import Link from 'next/link';
 
 const AboutPage: React.FC = () => {
   const values = [
     {
-      icon: <Lightbulb className="w-8 h-8" />,
+      icon: Lightbulb,
       title: 'Innovation',
-      description: 'Continuously pushing the boundaries of smart home technology with cutting-edge solutions.'
+      description: 'Pushing the boundaries of smart home technology with future-ready solutions.',
+      color: 'from-blue-500 to-cyan-400'
     },
     {
-      icon: <Users className="w-8 h-8" />,
+      icon: Users,
       title: 'Customer First',
-      description: 'Our clients are at the heart of everything we do, ensuring complete satisfaction.'
+      description: 'Our clients are at the heart of our engineering, ensuring complete satisfaction.',
+      color: 'from-purple-500 to-indigo-500'
     },
     {
-      icon: <Award className="w-8 h-8" />,
+      icon: Award,
       title: 'Quality',
-      description: 'Uncompromising quality in products, installation, and service delivery.'
+      description: 'Uncompromising precision in every product, sensor, and installation.',
+      color: 'from-emerald-500 to-teal-500'
     },
     {
-      icon: <Target className="w-8 h-8" />,
+      icon: Target,
       title: 'Excellence',
-      description: 'Striving for excellence in every aspect of our business operations.'
+      description: 'Striving for perfection across our entire automation ecosystem.',
+      color: 'from-rose-500 to-orange-500'
     }
   ];
 
   const milestones = [
-    { year: '2018', title: 'Founded', description: 'Started with a vision to transform Indian homes' },
-    { year: '2020', title: 'Expansion', description: 'Expanded to multiple cities across India' },
-    { year: '2022', title: 'Innovation', description: 'Launched proprietary automation platform' },
-    { year: '2024', title: 'Leadership', description: 'Became industry leader in smart home solutions' }
+    { year: '2018', title: 'The Vision', desc: 'Founded to bridge the gap in Indian smart home tech.' },
+    { year: '2020', title: 'Expansion', desc: 'Presence established in major Indian metros.' },
+    { year: '2022', title: 'Proprietary Tech', desc: 'Launched our unified cloud automation platform.' },
+    { year: '2024', title: 'Market Leader', desc: 'Recognized as a premier name in premium automation.' }
   ];
 
   return (
-    <div className="min-h-screen bg-black text-white">
+    <div className="min-h-screen bg-[#050505] text-white selection:bg-blue-500/30">
       <Navbar />
       
-      <section className="pt-32 pb-20 px-4 sm:px-6 lg:px-8">
-        <div className="max-w-7xl mx-auto">
-          <motion.div
-            initial={{ opacity: 0, y: 30 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.8 }}
-            className="text-center mb-16"
+      {/* Hero: Emotional Hook */}
+      <section className="relative pt-40 pb-24 overflow-hidden px-6">
+        <div className="absolute top-0 left-1/2 -translate-x-1/2 w-full h-[500px] bg-blue-600/10 blur-[120px] rounded-full pointer-events-none" />
+        <div className="max-w-5xl mx-auto text-center relative z-10">
+          <motion.span 
+            initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }}
+            className="text-blue-500 font-bold tracking-[0.2em] uppercase text-xs mb-4 block"
           >
-            <h1 className="text-4xl md:text-6xl font-bold mb-6">
-              About <span className="text-blue-400">Bellavita</span>
-            </h1>
-            <p className="text-xl text-gray-300 max-w-3xl mx-auto leading-relaxed">
-              Bellavita Smart Home is one of India's leading brands in the Smart Home Solutions space. 
-              With contemporary sensibilities, best-in-class technology and a deep understanding of the modern Indian home, 
-              the company provides people with spaces they are proud to own and happy to call home.
-            </p>
-          </motion.div>
-
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 mb-20">
-            <motion.div
-              initial={{ opacity: 0, x: -30 }}
-              animate={{ opacity: 1, x: 0 }}
-              transition={{ duration: 0.8, delay: 0.2 }}
-            >
-              <h2 className="text-3xl font-bold mb-6">Our Story</h2>
-              <p className="text-gray-300 leading-relaxed mb-6">
-                Bellavita was created with a vision to integrate globally available smart home technologies 
-                and make them accessible at reasonable price points. With advanced technologies and cloud services, 
-                Bellavita also transforms commercial spaces such as offices, hotels, gyms and residential buildings.
-              </p>
-              <p className="text-gray-300 leading-relaxed mb-6">
-                Bellavita believes smart homes and smart spaces should be accessible and affordable for everyone 
-                because the future lies in automation. Our automation integrates lighting control, audio systems, 
-                video systems, security and climate control under one seamless solution.
-              </p>
-              <p className="text-gray-300 leading-relaxed">
-                We believe that the future of living is smart, connected, and sustainable. 
-                Our mission is to lead this transformation, one home at a time.
-              </p>
-            </motion.div>
-
-            <motion.div
-              initial={{ opacity: 0, x: 30 }}
-              animate={{ opacity: 1, x: 0 }}
-              transition={{ duration: 0.8, delay: 0.4 }}
-              className="relative h-96 rounded-2xl overflow-hidden"
-            >
-              <img
-                src="/images/about-hero.jpg"
-                alt="About Bellavita"
-                className="w-full h-full object-cover"
-              />
-              <div className="absolute inset-0 bg-linear-to-t from-black/50 to-transparent" />
-            </motion.div>
-          </div>
-
-          <motion.div
-            initial={{ opacity: 0, y: 30 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.8, delay: 0.6 }}
-            className="mb-20"
+            Redefining Living Spaces
+          </motion.span>
+          <motion.h1 
+            initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.1 }}
+            className="text-5xl md:text-7xl font-bold tracking-tight mb-8"
           >
-            <h2 className="text-3xl font-bold text-center mb-12">Our Values</h2>
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
-              {values.map((value, index) => (
-                <Card key={index} className="text-center">
-                  <div className="text-blue-400 mb-4 flex justify-center">
-                    {value.icon}
-                  </div>
-                  <h3 className="text-xl font-semibold text-white mb-3">
-                    {value.title}
-                  </h3>
-                  <p className="text-gray-300 leading-relaxed">
-                    {value.description}
-                  </p>
-                </Card>
-              ))}
-            </div>
-          </motion.div>
-
-          <motion.div
-            initial={{ opacity: 0, y: 30 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.8, delay: 0.8 }}
+            The Soul of <span className="text-transparent bg-clip-text bg-gradient-to-r from-blue-400 to-cyan-300">Bellavita</span>
+          </motion.h1>
+          <motion.p 
+            initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.2 }}
+            className="text-xl text-gray-400 max-w-3xl mx-auto leading-relaxed"
           >
-            <h2 className="text-3xl font-bold text-center mb-12">Our Journey</h2>
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
-              {milestones.map((milestone, index) => (
-                <motion.div
-                  key={index}
-                  initial={{ opacity: 0, y: 20 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  transition={{ duration: 0.5, delay: 0.1 * index }}
-                  className="text-center"
-                >
-                  <div className="text-4xl font-bold text-blue-400 mb-2">
-                    {milestone.year}
-                  </div>
-                  <h3 className="text-xl font-semibold text-white mb-2">
-                    {milestone.title}
-                  </h3>
-                  <p className="text-gray-300 text-sm">
-                    {milestone.description}
-                  </p>
-                </motion.div>
-              ))}
-            </div>
-          </motion.div>
-
-          <motion.div
-            initial={{ opacity: 0, y: 30 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.8, delay: 0.8 }}
-            className="mb-20"
-          >
-            <h2 className="text-3xl font-bold text-center mb-12">Our Leadership Team</h2>
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-              <motion.div
-                initial={{ opacity: 0, y: 30 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.8, delay: 0.9 }}
-              >
-                <Card className="p-6 text-center">
-                  <h3 className="text-xl font-bold text-white mb-2">Amit Singh</h3>
-                  <p className="text-blue-400 mb-2">Founder, CTO, COO</p>
-                </Card>
-              </motion.div>
-              <motion.div
-                initial={{ opacity: 0, y: 30 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.8, delay: 1.0 }}
-              >
-                <Card className="p-6 text-center">
-                  <h3 className="text-xl font-bold text-white mb-2">Amaan Lakhani</h3>
-                  <p className="text-blue-400 mb-2">Co-Founder, CEO, CMO</p>
-                </Card>
-              </motion.div>
-              <motion.div
-                initial={{ opacity: 0, y: 30 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.8, delay: 1.1 }}
-              >
-                <Card className="p-6 text-center">
-                  <h3 className="text-xl font-bold text-white mb-2">Mukesh Chaudhary</h3>
-                  <p className="text-blue-400 mb-2">Founder, Head Architect</p>
-                </Card>
-              </motion.div>
-            </div>
-          </motion.div>
+            One of India's leading brands in Smart Home Solutions, blending contemporary sensibilities with best-in-class technology.
+          </motion.p>
         </div>
       </section>
+
+      {/* Story Section: The Depth Box */}
+      <section className="py-20 px-6 max-w-7xl mx-auto">
+        <div className="relative p-1 md:p-12 rounded-[2.5rem] bg-[#0A0A0A] border border-white/10 shadow-[inset_0_1px_1px_rgba(255,255,255,0.05)]">
+          <div className="grid lg:grid-cols-2 gap-16 items-center">
+            <div className="space-y-6">
+              <h2 className="text-3xl font-bold tracking-tight">Making the Future Affordable.</h2>
+              <p className="text-gray-400 leading-relaxed">
+                Bellavita was born to bridge the gap. We integrate globally available smart home technologies 
+                and make them accessible at price points that make sense for the modern Indian home.
+              </p>
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 pt-4">
+                {['Lighting Control', 'Audio Systems', 'Biometric Security', 'Climate Control'].map(item => (
+                  <div key={item} className="flex items-center gap-3 text-sm font-medium text-gray-300">
+                    <CheckCircle2 className="w-5 h-5 text-blue-500" /> {item}
+                  </div>
+                ))}
+              </div>
+            </div>
+            <div className="relative aspect-video rounded-3xl overflow-hidden border border-white/10 bg-zinc-900 group">
+              <div className="absolute inset-0 bg-gradient-to-tr from-blue-600/20 to-transparent opacity-50" />
+              <div className="absolute inset-0 flex items-center justify-center p-8">
+                 <p className="text-center italic text-gray-500">"The future of living is smart, connected, and sustainable."</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* Values: Interaction Cards */}
+      <section className="py-24 px-6 max-w-7xl mx-auto">
+        <h2 className="text-center text-sm font-bold tracking-[0.2em] uppercase text-gray-500 mb-16">Our Core Values</h2>
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+          {values.map((v, i) => (
+            <motion.div 
+              key={v.title}
+              whileHover={{ y: -8 }}
+              className="p-8 rounded-3xl bg-[#0A0A0A] border border-white/10 transition-all hover:border-blue-500/30 group"
+            >
+              <div className={`w-12 h-12 rounded-2xl bg-gradient-to-br ${v.color} flex items-center justify-center mb-6 shadow-lg`}>
+                <v.icon className="w-6 h-6 text-white" />
+              </div>
+              <h3 className="text-xl font-bold mb-3">{v.title}</h3>
+              <p className="text-gray-400 text-sm leading-relaxed">{v.description}</p>
+            </motion.div>
+          ))}
+        </div>
+      </section>
+
+      {/* Timeline: Linear Path */}
+      <section className="py-24 bg-[#080808] border-y border-white/5 px-6">
+        <div className="max-w-7xl mx-auto">
+          <h2 className="text-3xl font-bold mb-16">Our Journey</h2>
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-12 relative">
+             <div className="hidden lg:block absolute top-6 left-0 w-full h-[1px] bg-gradient-to-r from-blue-500/50 via-white/10 to-transparent" />
+             {milestones.map((m, i) => (
+               <div key={m.year} className="relative group">
+                 <div className="w-12 h-12 rounded-full bg-[#0A0A0A] border-2 border-blue-500 flex items-center justify-center font-bold text-blue-500 mb-6 relative z-10 group-hover:scale-110 transition-transform">
+                   {i + 1}
+                 </div>
+                 <div className="text-2xl font-bold mb-1">{m.year}</div>
+                 <div className="text-blue-400 font-semibold mb-2">{m.title}</div>
+                 <p className="text-gray-500 text-sm">{m.desc}</p>
+               </div>
+             ))}
+          </div>
+        </div>
+      </section>
+
 
       <Footer />
     </div>

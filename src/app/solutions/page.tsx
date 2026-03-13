@@ -4,225 +4,162 @@ import React from 'react';
 import { motion } from 'framer-motion';
 import Navbar from '@/components/layout/Navbar';
 import Footer from '@/components/layout/Footer';
-import Card from '@/components/ui/Card';
-import Button from '@/components/ui/Button';
 import { 
-  Lightbulb, 
-  Cpu, 
-  PanelsTopLeft, 
-  Shield, 
-  Volume2, 
-  Building, 
-  Briefcase, 
-  Hotel, 
-  Clock,
-  Home,
-  Zap,
-  Smartphone
+  Lightbulb, Cpu, Shield, Hotel, Briefcase, Building, 
+  Clock, Home, Zap, Smartphone, Power, Lock, 
+  Activity, Monitor, CheckCircle2, Star, Quote 
 } from 'lucide-react';
 
 const SolutionsPage: React.FC = () => {
   const solutions = [
-    {
-      id: 'smart-homes',
-      icon: <Home className="w-12 h-12" />,
-      title: 'Smart Homes',
-      description: 'Smart homes allow control of lighting, appliances, security systems and entertainment systems through a single interface.',
-      features: [
-        'Unified control platform',
-        'Voice assistant integration',
-        'Mobile app control',
-        'Automated scheduling',
-        'Energy monitoring'
-      ],
-      image: '/images/smart-home.jpg'
-    },
-    {
-      id: 'smart-hotels',
-      icon: <Hotel className="w-12 h-12" />,
-      title: 'Smart Hotels',
-      description: 'Smart hotels improve guest experience through personalized room automation and security.',
-      features: [
-        'Guest room automation',
-        'Keyless entry systems',
-        'Climate control',
-        'Lighting scenes',
-        'Energy management'
-      ],
-      image: '/images/smart-hotel.jpg'
-    },
-    {
-      id: 'smart-offices',
-      icon: <Briefcase className="w-12 h-12" />,
-      title: 'Smart Offices',
-      description: 'Smart offices improve workplace efficiency and automation while enhancing comfort and security.',
-      features: [
-        'Meeting room automation',
-        'Access control systems',
-        'Lighting optimization',
-        'Climate management',
-        'Productivity tracking'
-      ],
-      image: '/images/smart-office.jpg'
-    },
-    {
-      id: 'smart-buildings',
-      icon: <Building className="w-12 h-12" />,
-      title: 'Smart Buildings',
-      description: 'Smart buildings integrate lighting, heating and monitoring systems into a centralized automation system.',
-      features: [
-        'Building management system',
-        'HVAC automation',
-        'Security integration',
-        'Energy optimization',
-        'Predictive maintenance'
-      ],
-      image: '/images/smart-building.jpg'
-    }
-  ];
-
-  const benefits = [
-    {
-      icon: <Smartphone className="w-8 h-8" />,
-      title: 'Single App Control',
-      description: 'Manage everything from one intuitive mobile application'
-    },
-    {
-      icon: <Zap className="w-8 h-8" />,
-      title: 'Energy Efficient',
-      description: 'Reduce energy consumption with intelligent automation'
-    },
-    {
-      icon: <Home className="w-8 h-8" />,
-      title: 'Increased Comfort',
-      description: 'Create the perfect environment for every moment'
-    }
+    { id: 'smart-homes', icon: Home, title: 'Smart Homes', color: 'from-blue-600/20', description: 'Complete home automation with unified control of lighting, climate, and security.', features: ['Unified control platform', 'Voice assistant integration', 'Mobile app control', 'Automated scheduling'] },
+    { id: 'smart-hotels', icon: Hotel, title: 'Smart Hotels', color: 'from-purple-600/20', description: 'Enhance guest experience with intelligent room automation and keyless entry.', features: ['Guest room automation', 'Keyless entry systems', 'Climate control', 'Energy management'] },
+    { id: 'smart-offices', icon: Briefcase, title: 'Smart Offices', color: 'from-emerald-600/20', description: 'Boost productivity with intelligent meeting rooms and environmental optimization.', features: ['Meeting room automation', 'Access control', 'Lighting optimization', 'Space utilization'] },
+    { id: 'smart-buildings', icon: Building, title: 'Smart Buildings', color: 'from-orange-600/20', description: 'Comprehensive building management with integrated HVAC and energy systems.', features: ['BMS Integration', 'HVAC automation', 'Predictive maintenance', 'Sustainability reporting'] }
   ];
 
   return (
-    <div className="min-h-screen bg-black text-white">
+    <div className="min-h-screen bg-[#050505] text-white selection:bg-blue-500/30">
       <Navbar />
       
-      <section className="pt-32 pb-20 px-4 sm:px-6 lg:px-8">
-        <div className="max-w-7xl mx-auto">
-          <motion.div
-            initial={{ opacity: 0, y: 30 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.8 }}
-            className="text-center mb-16"
-          >
-            <h1 className="text-4xl md:text-6xl font-bold mb-6">
-              Smart <span className="text-blue-400">Solutions</span>
+      {/* Hero Section */}
+      <section className="pt-40 pb-20 px-6">
+        <div className="max-w-5xl mx-auto text-center">
+          <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.8 }}>
+            <h1 className="text-5xl md:text-7xl font-bold tracking-tight mb-8">
+              Smart <span className="text-transparent bg-clip-text bg-gradient-to-r from-blue-400 to-cyan-400">Solutions</span>
             </h1>
-            <p className="text-xl text-gray-300 max-w-3xl mx-auto leading-relaxed">
-              Discover our comprehensive range of smart home and automation solutions 
-              designed to transform your living and working spaces.
+            <p className="text-xl text-gray-400 max-w-2xl mx-auto leading-relaxed">
+              Tailored automation ecosystems designed to transform residential, commercial, and hospitality spaces.
             </p>
           </motion.div>
+        </div>
+      </section>
 
-          <motion.div
-            initial={{ opacity: 0, y: 30 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.8, delay: 0.2 }}
-            className="mb-16"
-          >
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-              {benefits.map((benefit, index) => (
-                <Card key={index} className="text-center">
-                  <div className="text-blue-400 mb-4 flex justify-center">
-                    {benefit.icon}
-                  </div>
-                  <h3 className="text-xl font-semibold text-white mb-3">
-                    {benefit.title}
-                  </h3>
-                  <p className="text-gray-300">
-                    {benefit.description}
-                  </p>
-                </Card>
-              ))}
-            </div>
-          </motion.div>
+      {/* Grid: High-Level Services */}
+      <section className="py-20 px-6 max-w-7xl mx-auto">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+          {[
+            'Smart Lighting', 'Full Automation', 'Motorized Curtains',
+            'Smart Security', 'Audio / Video', 'Building Solutions',
+            'Office Optimization', 'Hotel Experience', '24x7 Monitoring'
+          ].map((item, idx) => (
+            <motion.div
+              key={item}
+              initial={{ opacity: 0, y: 20 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              transition={{ delay: idx * 0.05 }}
+              className="group relative p-8 rounded-[2rem] bg-[#0A0A0A] border border-white/10 hover:border-blue-500/40 transition-all duration-500 hover:bg-[#0E0E0E] shadow-[inset_0_1px_1px_rgba(255,255,255,0.05)]"
+            >
+              <div className="flex items-center gap-4 mb-4">
+                <div className="w-2 h-2 rounded-full bg-blue-500 group-hover:scale-150 group-hover:shadow-[0_0_10px_rgba(59,130,246,0.5)] transition-all" />
+                <h3 className="text-lg font-bold group-hover:text-blue-400 transition-colors">{item}</h3>
+              </div>
+              <p className="text-gray-500 text-sm leading-relaxed">High-performance tech integrated with seamless control logic for {item.toLowerCase()}.</p>
+            </motion.div>
+          ))}
+        </div>
+      </section>
 
-          <div className="space-y-20">
-            {solutions.map((solution, index) => (
-              <motion.div
-                key={solution.id}
-                id={solution.id}
-                initial={{ opacity: 0, y: 30 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.8 }}
-                viewport={{ once: true }}
-                className={`grid grid-cols-1 lg:grid-cols-2 gap-12 items-center ${
-                  index % 2 === 1 ? 'lg:flex-row-reverse' : ''
-                }`}
-              >
-                <div className={index % 2 === 1 ? 'lg:order-2' : ''}>
-                  <div className="relative h-64 lg:h-96 rounded-2xl overflow-hidden">
-                    <img
-                      src={solution.image}
-                      alt={solution.title}
-                      className="w-full h-full object-cover"
-                    />
-                    <div className="absolute inset-0 bg-linear-to-t from-black/50 to-transparent" />
-                  </div>
+      {/* Alternating Detailed Solutions */}
+      <section className="py-24 px-6 bg-[#080808] border-y border-white/5">
+        <div className="max-w-7xl mx-auto space-y-32">
+          {solutions.map((sol, idx) => (
+            <motion.div 
+              key={sol.id}
+              initial={{ opacity: 0 }}
+              whileInView={{ opacity: 1 }}
+              viewport={{ once: true }}
+              className={`flex flex-col ${idx % 2 === 1 ? 'lg:flex-row-reverse' : 'lg:flex-row'} gap-16 items-center`}
+            >
+              {/* Visual Side */}
+              <div className="w-full lg:w-1/2">
+                <div className={`aspect-[4/3] rounded-[3rem] bg-gradient-to-br ${sol.color} to-transparent border border-white/10 flex items-center justify-center relative group overflow-hidden`}>
+                   <div className="absolute inset-0 bg-[url('https://www.transparenttextures.com/patterns/carbon-fibre.png')] opacity-10" />
+                   <sol.icon className="w-24 h-24 text-white/20 group-hover:text-white/40 group-hover:scale-110 transition-all duration-700" />
+                   <div className="absolute bottom-8 left-8 right-8 p-6 rounded-2xl bg-black/40 backdrop-blur-md border border-white/10">
+                      <p className="text-xs font-bold uppercase tracking-widest text-blue-400 mb-1">Sector Solution</p>
+                      <p className="text-xl font-bold">{sol.title}</p>
+                   </div>
                 </div>
+              </div>
 
-                <div className={index % 2 === 1 ? 'lg:order-1' : ''}>
-                  <div className="flex items-center mb-4">
-                    <div className="text-blue-400 mr-4">
-                      {solution.icon}
+              {/* Text Side */}
+              <div className="w-full lg:w-1/2">
+                <div className="flex items-center gap-4 mb-6">
+                  <div className="p-3 rounded-2xl bg-blue-500/10 border border-blue-500/20">
+                    <sol.icon className="w-6 h-6 text-blue-400" />
+                  </div>
+                  <h2 className="text-4xl font-bold">{sol.title}</h2>
+                </div>
+                <p className="text-xl text-gray-400 mb-10 leading-relaxed">{sol.description}</p>
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-y-4 gap-x-8">
+                  {sol.features.map(feat => (
+                    <div key={feat} className="flex items-center gap-3 text-gray-300">
+                      <CheckCircle2 className="w-5 h-5 text-emerald-500" />
+                      <span className="text-sm font-medium">{feat}</span>
                     </div>
-                    <h2 className="text-3xl font-bold text-white">
-                      {solution.title}
-                    </h2>
-                  </div>
-                  
-                  <p className="text-xl text-gray-300 mb-6 leading-relaxed">
-                    {solution.description}
-                  </p>
-
-                  <div className="space-y-3 mb-8">
-                    {solution.features.map((feature, featureIndex) => (
-                      <div key={featureIndex} className="flex items-center">
-                        <div className="w-2 h-2 bg-blue-400 rounded-full mr-3"></div>
-                        <span className="text-gray-300">{feature}</span>
-                      </div>
-                    ))}
-                  </div>
-
-                  <Button>
-                    Learn More
-                  </Button>
+                  ))}
                 </div>
-              </motion.div>
-            ))}
-          </div>
+              </div>
+            </motion.div>
+          ))}
+        </div>
+      </section>
 
-          <motion.div
-            initial={{ opacity: 0, y: 30 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.8 }}
-            viewport={{ once: true }}
-            className="mt-20"
-          >
-            <div className="bg-linear-to-r from-blue-600 to-purple-600 rounded-2xl p-8 max-w-4xl mx-auto">
-              <h2 className="text-3xl font-bold text-white mb-6">
-                Ready to Transform Your Space?
-              </h2>
-              <p className="text-white/90 text-lg mb-8 max-w-2xl mx-auto">
-                Get in touch with our experts to design the perfect automation solution 
-                for your home or business.
-              </p>
-              <div className="flex flex-col sm:flex-row gap-4 justify-center">
-                <Button size="lg" className="bg-white text-black hover:bg-gray-100">
-                  Get Free Consultation
-                </Button>
-                <Button variant="outline" size="lg" className="border-white text-white hover:bg-white hover:text-black">
-                  View Portfolio
-                </Button>
+      {/* Category Features: Bento Style */}
+      <section className="py-32 px-6 max-w-7xl mx-auto">
+        <div className="text-center mb-16">
+          <h2 className="text-4xl font-bold mb-4">The Hardware Ecosystem</h2>
+          <p className="text-gray-400">Intelligent devices engineered for reliability.</p>
+        </div>
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
+          {[
+            { icon: Power, title: 'Smart Switches', tags: ['Touch', 'Voice', 'App'] },
+            { icon: Lightbulb, title: 'Smart Lighting', tags: ['RGB', 'CCT', 'Scenes'] },
+            { icon: Lock, title: 'Smart Security', tags: ['Biometric', 'IP66', 'Alerts'] },
+            { icon: Monitor, title: 'Control Panels', tags: ['HMI', 'LCD', 'Zigbee'] }
+          ].map((cat, i) => (
+            <div key={cat.title} className="p-8 rounded-[2.5rem] bg-[#0A0A0A] border border-white/10 hover:border-white/20 transition-all group">
+              <div className="w-14 h-14 rounded-2xl bg-zinc-900 border border-white/5 flex items-center justify-center mb-6 group-hover:bg-blue-600 transition-colors duration-500">
+                <cat.icon className="w-6 h-6 text-blue-400 group-hover:text-white" />
+              </div>
+              <h3 className="text-xl font-bold mb-4">{cat.title}</h3>
+              <div className="flex flex-wrap gap-2">
+                {cat.tags.map(tag => (
+                  <span key={tag} className="px-3 py-1 rounded-full bg-white/5 text-[10px] font-bold uppercase tracking-widest text-gray-400 border border-white/5">
+                    {tag}
+                  </span>
+                ))}
               </div>
             </div>
-          </motion.div>
+          ))}
+        </div>
+      </section>
+
+      {/* Testimonials: Premium Styling */}
+      <section className="py-32 px-6 bg-[#080808]">
+        <div className="max-w-7xl mx-auto">
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+            {[
+              { name: 'Rajesh Kumar', role: 'Homeowner', quote: 'Bellavita transformed our home into a smart living space. The app is incredibly intuitive.' },
+              { name: 'Priya Sharma', role: 'Hotel Manager', quote: 'Guest satisfaction scores increased by 40% after implementing their smart solutions.' },
+              { name: 'Amit Patel', role: 'CEO', quote: 'The smart office solution has reduced energy costs significantly while boosting comfort.' }
+            ].map((t, i) => (
+              <div key={t.name} className="relative p-10 rounded-[2.5rem] bg-[#0D0D0D] border border-white/5 shadow-2xl">
+                <Quote className="absolute top-8 right-10 w-12 h-12 text-white/5" />
+                <div className="flex gap-1 mb-6">
+                  {[...Array(5)].map((_, i) => <Star key={i} className="w-4 h-4 fill-yellow-500 text-yellow-500" />)}
+                </div>
+                <p className="text-gray-300 italic mb-8 leading-relaxed">"{t.quote}"</p>
+                <div className="border-t border-white/5 pt-6">
+                  <p className="font-bold">{t.name}</p>
+                  <p className="text-sm text-blue-500 font-medium">{t.role}</p>
+                </div>
+              </div>
+            ))}
+          </div>
         </div>
       </section>
 
