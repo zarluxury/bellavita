@@ -44,9 +44,9 @@ export async function createProduct(productData: ProductInput): Promise<ProductR
   console.log('createProduct received data:', productData);
   
   const result = await query(
-    `INSERT INTO products (name, description, image_url, category_id) 
-     VALUES ($1, $2, $3, $4) 
-     RETURNING id, name, description, image_url, 
+    `INSERT INTO products (id, name, description, image_url, category_id, created_at, updated_at) 
+     VALUES (gen_random_uuid(), $1, $2, $3, $4, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP) 
+     RETURNING id, name, description, image_url, category_id,
        (SELECT slug FROM categories WHERE id = $4) as category_slug`,
     [productData.name, productData.description, productData.imageUrl, productData.categoryId]
   );

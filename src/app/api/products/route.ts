@@ -1,4 +1,8 @@
 import { NextRequest, NextResponse } from 'next/server';
+import { validateProductFormData } from '@/lib/api-utils';
+import { createProduct } from '@/lib/products';
+import { query } from '@/lib/db';
+import { uploadToR2 } from '@/lib/r2';
 
 const categoryMap: { [key: string]: string } = {
   'smart-switches': 'SMART SWITCH',
@@ -148,6 +152,77 @@ export async function GET(request: NextRequest) {
     console.error('Error fetching products:', error);
     return NextResponse.json(
       { error: 'Failed to fetch products' },
+      { status: 500 }
+    );
+  }
+}
+
+export async function POST(request: NextRequest) {
+  try {
+    const formData = await request.formData();
+    
+    // Validate form data
+    const validation = validateProductFormData(formData);
+    if (!validation.valid) {
+      return NextResponse.json(
+        { success: false, error: { error: validation.error } },
+        { status: 400 }
+      );
+    }
+
+    const { name, description, categorySlug, image } = validation.data!;
+
+    // Get category ID by slug
+    const categoryResult = await query(
+      'SELECT id FROM categories WHERE slug = $1',
+      [categorySlug]
+    );
+    
+    if (categoryResult.rows.length === 0) {
+      return NextResponse.json(
+        { success: false, error: { error: 'Category not found' } },
+        { status: 400 }
+      );
+    }
+    
+    const categoryId = categoryResult.rows[0].id;
+
+    // Handle image upload if present
+    let imageUrl = '';
+    if (image) {
+      try {
+        const uploadResult = await uploadToR2(image);
+        imageUrl = uploadResult.url;
+        console.log('Image uploaded successfully to R2:', imageUrl);
+      } catch (uploadError) {
+        console.error('Image upload failed:', uploadError);
+        return NextResponse.json(
+          { success: false, error: { error: `Image upload failed: ${uploadError instanceof Error ? uploadError.message : 'Unknown error'}` } },
+          { status: 500 }
+        );
+      }
+    }
+
+    // Create product in database
+    const product = await createProduct({
+      name,
+      description,
+      categoryId,
+      imageUrl
+    });
+
+    return NextResponse.json({
+      success: true,
+      data: {
+        message: 'Product created successfully',
+        product
+      }
+    });
+
+  } catch (error) {
+    console.error('Error creating product:', error);
+    return NextResponse.json(
+      { success: false, error: { error: 'Failed to create product' } },
       { status: 500 }
     );
   }
