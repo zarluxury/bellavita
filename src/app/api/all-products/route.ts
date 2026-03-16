@@ -43,63 +43,63 @@ export const runtime = "nodejs";
 
 export async function GET(request: NextRequest) {
   try {
-
+    // First, check if we have a valid DATABASE_URL
+    const hasValidDbUrl = process.env.DATABASE_URL && 
+                         process.env.DATABASE_URL.startsWith('postgresql://');
     
-    // Try to get products from database first
-    const { getAllProducts } = await import('@/lib/products');
-    
-    if (process.env.DATABASE_URL && process.env.DATABASE_URL.startsWith('postgresql://')) {
-      try {
-        console.log('Attempting database connection...');
-        const products = await getAllProducts();
-        
-        const transformedProducts = products.map((product: any) => ({
-          id: product.id,
-          name: product.name,
-          description: product.description || '',
-          imageUrl: product.imageUrl || '',
-          category: product.category?.slug || null
-        }));
-
-        console.log(`Successfully fetched ${products.length} products from database`);
-        
-        return NextResponse.json({
-          success: true,
-          data: transformedProducts,
-          source: 'database'
-        });
-      } catch (dbError) {
-        console.error('Database error, falling back to static data:', dbError);
-        
-        // Fall back to static data if database fails
-        return NextResponse.json({
-          success: true,
-          data: staticProducts,
-          source: 'static_fallback',
-          error: 'Database connection failed'
-        });
-      }
-    } else {
-      // No database URL configured, use static data
-      console.warn('DATABASE_URL not configured or invalid, using static data');
-      
+    if (!hasValidDbUrl) {
+      // Return static data immediately if no database URL
       return NextResponse.json({
         success: true,
         data: staticProducts,
-        source: 'static_default',
-        warning: 'DATABASE_URL not configured'
+        source: 'static_no_db'
+      });
+    }
+
+    // Try database connection with timeout
+    try {
+      // Dynamic import to avoid loading Prisma if not needed
+      const { getAllProducts } = await import('@/lib/products');
+      
+      // Set a timeout for database operation
+      const timeoutPromise = new Promise((_, reject) => {
+        setTimeout(() => reject(new Error('Database timeout')), 5000);
+      });
+      
+      const dbPromise = getAllProducts();
+      const products = await Promise.race([dbPromise, timeoutPromise]) as any[];
+      
+      const transformedProducts = products.map((product: any) => ({
+        id: product.id,
+        name: product.name,
+        description: product.description || '',
+        imageUrl: product.imageUrl || '',
+        category: product.category?.slug || null
+      }));
+
+      return NextResponse.json({
+        success: true,
+        data: transformedProducts,
+        source: 'database'
+      });
+      
+    } catch (dbError) {
+      // Any database error falls back to static data
+      return NextResponse.json({
+        success: true,
+        data: staticProducts,
+        source: 'static_fallback',
+        error: dbError instanceof Error ? dbError.message : 'Database error'
       });
     }
 
   } catch (error) {
-    console.error('Unexpected error in /api/all-products:', error);
-    
-    // Final fallback to static data
+    // Ultimate fallback - should never reach here but just in case
     return NextResponse.json({
       success: true,
       data: staticProducts,
       source: 'static_emergency',
-      error: 'Unexpected error occurred'
+      error: error instanceof Error ? error.message : 'Unknown error'
     });
   }
 }
