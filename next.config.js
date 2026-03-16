@@ -11,6 +11,16 @@ const nextConfig = {
     ],
   },
   serverExternalPackages: ['@prisma/client'],
+  webpack: (config, { isServer }) => {
+    if (!isServer) {
+      config.resolve.fallback = {
+        ...config.resolve.fallback,
+        fs: false,
+      };
+    }
+    return config;
+  },
+  turbopack: {}, // Add empty turbopack config to silence the error
 }
 
 module.exports = nextConfig
