@@ -1,4 +1,4 @@
-import { prisma } from '@/lib/prisma';
+import { query } from './db';
 
 export interface ProductInput {
   name: string;
@@ -15,187 +15,299 @@ export interface ProductResponse {
   category: string;
 }
 
+export interface Category {
+  id: string;
+  slug: string;
+  name: string;
+  created_at: Date;
+  updated_at: Date;
+}
+
+export interface Product {
+  id: string;
+  name: string;
+  description?: string;
+  image_url?: string;
+  category_id: string;
+  created_at: Date;
+  updated_at: Date;
+  category?: {
+    slug: string;
+    name: string;
+  };
+}
+
 /**
  * Create a new product in the database
- * @param productData - Product data to create
- * @returns Created product with category information
  */
 export async function createProduct(productData: ProductInput): Promise<ProductResponse> {
   console.log('createProduct received data:', productData);
   
-  const product = await prisma.product.create({
-    data: productData,
-    include: {
-      category: {
-        select: {
-          slug: true,
-          name: true,
-        }
-      }
-    }
-  });
+  const result = await query(
+    `INSERT INTO products (name, description, image_url, category_id) 
+     VALUES ($1, $2, $3, $4) 
+     RETURNING id, name, description, image_url, 
+       (SELECT slug FROM categories WHERE id = $4) as category_slug`,
+    [productData.name, productData.description, productData.imageUrl, productData.categoryId]
+  );
 
-  console.log('Product created in DB with imageUrl:', product.imageUrl);
+  const product = result.rows[0];
+  console.log('Product created in DB with imageUrl:', product.image_url);
 
   return {
     id: product.id,
     name: product.name,
     description: product.description || '',
-    image: product.imageUrl || '',
-    category: product.category.slug,
+    image: product.image_url || '',
+    category: product.category_slug,
   };
 }
 
 /**
  * Get products by category slug
- * @param categorySlug - Category slug to filter by
- * @returns Array of products in the specified category
  */
 export async function getProductsByCategory(categorySlug: string): Promise<any[]> {
-  const categoryData = await prisma.category.findUnique({
-    where: { slug: categorySlug },
-    include: {
-      products: {
-        select: {
-          id: true,
-          name: true,
-          description: true,
-          imageUrl: true,
-        },
-        orderBy: {
-          name: 'asc'
-        }
-      }
-    }
-  });
+  const result = await query(
+    `SELECT p.id, p.name, p.description, p.image_url 
+     FROM products p 
+     JOIN categories c ON p.category_id = c.id 
+     WHERE c.slug = $1 
+     ORDER BY p.name ASC`,
+    [categorySlug]
+  );
 
-  if (!categoryData) {
-    throw new Error('Category not found');
+  if (result.rows.length === 0) {
+    // Check if category exists
+    const categoryExists = await query(
+      'SELECT id FROM categories WHERE slug = $1',
+      [categorySlug]
+    );
+    if (categoryExists.rows.length === 0) {
+      throw new Error('Category not found');
+    }
   }
 
-  return categoryData.products.map((product: { name: any; imageUrl: any; description: any; }) => ({
+  return result.rows.map((product: any) => ({
     name: product.name,
-    image: product.imageUrl || '',
+    image: product.image_url || '',
     description: product.description || ''
   }));
 }
 
 /**
  * Get all categories with product counts
- * @returns Array of categories with product counts
  */
 export async function getAllCategories() {
-  const categories = await prisma.category.findMany({
-    orderBy: {
-      name: 'asc'
-    }
-  });
-
-  // Get product counts separately
-  const categoriesWithCounts = await Promise.all(
-    categories.map(async (category: { id: any; slug: any; name: any; }) => {
-      const productCount = await prisma.product.count({
-        where: { categoryId: category.id }
-      });
-      
-      return {
-        id: category.id, // Keep the actual database ID
-        slug: category.slug, // Add the slug field
-        title: category.name,
-        folder: category.name,
-        productCount
-      };
-    })
+  const result = await query(
+    `SELECT c.id, c.slug, c.name, COUNT(p.id) as product_count 
+     FROM categories c 
+     LEFT JOIN products p ON c.id = p.category_id 
+     GROUP BY c.id, c.slug, c.name 
+     ORDER BY c.name ASC`
   );
 
-  return categoriesWithCounts;
+  return result.rows.map((category: any) => ({
+    id: category.id,
+    slug: category.slug,
+    title: category.name,
+    folder: category.name,
+    productCount: parseInt(category.product_count)
+  }));
 }
 
 /**
  * Get a single product by ID
- * @param productId - Product ID
- * @returns Product details or null if not found
  */
-export async function getProductById(productId: string) {
-  return await prisma.product.findUnique({
-    where: { id: productId },
-    include: {
-      category: {
-        select: {
-          slug: true,
-          name: true,
-        }
-      }
+export async function getProductById(productId: string): Promise<Product | null> {
+  const result = await query(
+    `SELECT p.id, p.name, p.description, p.image_url, p.category_id, 
+            p.created_at, p.updated_at, c.slug, c.name as category_name
+     FROM products p 
+     JOIN categories c ON p.category_id = c.id 
+     WHERE p.id = $1`,
+    [productId]
+  );
+
+  if (result.rows.length === 0) {
+    return null;
+  }
+
+  const product = result.rows[0];
+  return {
+    id: product.id,
+    name: product.name,
+    description: product.description,
+    image_url: product.image_url,
+    category_id: product.category_id,
+    created_at: product.created_at,
+    updated_at: product.updated_at,
+    category: {
+      slug: product.slug,
+      name: product.category_name,
     }
-  });
+  };
 }
 
 /**
  * Update a product
- * @param productId - Product ID to update
- * @param updateData - Data to update
- * @returns Updated product
  */
-export async function updateProduct(productId: string, updateData: Partial<ProductInput>) {
-  return await prisma.product.update({
-    where: { id: productId },
-    data: updateData,
-    include: {
-      category: {
-        select: {
-          slug: true,
-          name: true,
-        }
-      }
+export async function updateProduct(productId: string, updateData: Partial<ProductInput>): Promise<Product> {
+  const fields = [];
+  const values = [];
+  let paramIndex = 1;
+
+  if (updateData.name !== undefined) {
+    fields.push(`name = $${paramIndex++}`);
+    values.push(updateData.name);
+  }
+  if (updateData.description !== undefined) {
+    fields.push(`description = $${paramIndex++}`);
+    values.push(updateData.description);
+  }
+  if (updateData.imageUrl !== undefined) {
+    fields.push(`image_url = $${paramIndex++}`);
+    values.push(updateData.imageUrl);
+  }
+  if (updateData.categoryId !== undefined) {
+    fields.push(`category_id = $${paramIndex++}`);
+    values.push(updateData.categoryId);
+  }
+
+  if (fields.length === 0) {
+    throw new Error('No fields to update');
+  }
+
+  values.push(productId);
+
+  const result = await query(
+    `UPDATE products 
+     SET ${fields.join(', ')} 
+     WHERE id = $${paramIndex} 
+     RETURNING id, name, description, image_url, category_id, created_at, updated_at`,
+    values
+  );
+
+  if (result.rows.length === 0) {
+    throw new Error('Product not found');
+  }
+
+  const product = result.rows[0];
+  const categoryResult = await query(
+    'SELECT slug, name FROM categories WHERE id = $1',
+    [product.category_id]
+  );
+
+  const category = categoryResult.rows[0];
+
+  return {
+    id: product.id,
+    name: product.name,
+    description: product.description,
+    image_url: product.image_url,
+    category_id: product.category_id,
+    created_at: product.created_at,
+    updated_at: product.updated_at,
+    category: {
+      slug: category.slug,
+      name: category.name,
     }
-  });
+  };
 }
 
 /**
  * Get all products with category information
- * @returns Array of all products
  */
-export async function getAllProducts() {
-  return await prisma.product.findMany({
-    include: {
-      category: {
-        select: {
-          slug: true,
-          name: true,
-        }
-      }
-    },
-    orderBy: {
-      createdAt: 'desc'
+export async function getAllProducts(): Promise<Product[]> {
+  const result = await query(
+    `SELECT p.id, p.name, p.description, p.image_url, p.category_id, 
+            p.created_at, p.updated_at, c.slug, c.name as category_name
+     FROM products p 
+     JOIN categories c ON p.category_id = c.id 
+     ORDER BY p.created_at DESC`
+  );
+
+  return result.rows.map((product: any) => ({
+    id: product.id,
+    name: product.name,
+    description: product.description,
+    image_url: product.image_url,
+    category_id: product.category_id,
+    created_at: product.created_at,
+    updated_at: product.updated_at,
+    category: {
+      slug: product.slug,
+      name: product.category_name,
     }
-  });
+  }));
 }
 
 /**
  * Delete a product
- * @param productId - Product ID to delete
- * @returns Deleted product
  */
-export async function deleteProduct(productId: string) {
-  return await prisma.product.delete({
-    where: { id: productId }
-  });
+export async function deleteProduct(productId: string): Promise<Product> {
+  const result = await query(
+    `DELETE FROM products WHERE id = $1 RETURNING *`,
+    [productId]
+  );
+
+  if (result.rows.length === 0) {
+    throw new Error('Product not found');
+  }
+
+  return result.rows[0];
 }
 
 /**
  * Get category by slug
- * @param slug - Category slug
- * @returns Category details or null if not found
  */
 export async function getCategoryBySlug(slug: string) {
-  return await prisma.category.findUnique({
-    where: { slug },
-    include: {
-      _count: {
-        select: {
-          products: true
-        }
-      }
+  const result = await query(
+    `SELECT c.id, c.slug, c.name, c.created_at, c.updated_at, 
+            COUNT(p.id) as product_count
+     FROM categories c 
+     LEFT JOIN products p ON c.id = p.category_id 
+     WHERE c.slug = $1 
+     GROUP BY c.id, c.slug, c.name, c.created_at, c.updated_at`,
+    [slug]
+  );
+
+  if (result.rows.length === 0) {
+    return null;
+  }
+
+  const category = result.rows[0];
+  return {
+    id: category.id,
+    slug: category.slug,
+    name: category.name,
+    created_at: category.created_at,
+    updated_at: category.updated_at,
+    _count: {
+      products: parseInt(category.product_count)
     }
-  });
+  };
+}
+
+/**
+ * Create a new category
+ */
+export async function createCategory(slug: string, name: string): Promise<Category> {
+  const result = await query(
+    'INSERT INTO categories (slug, name) VALUES ($1, $2) RETURNING *',
+    [slug, name]
+  );
+
+  return result.rows[0];
+}
+
+/**
+ * Get category by ID
+ */
+export async function getCategoryById(categoryId: string): Promise<Category | null> {
+  const result = await query(
+    'SELECT * FROM categories WHERE id = $1',
+    [categoryId]
+  );
+
+  return result.rows[0] || null;
 }

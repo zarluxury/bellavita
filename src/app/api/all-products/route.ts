@@ -6,35 +6,35 @@ const staticProducts = [
     id: '1',
     name: 'Curtain Motor',
     description: 'High-performance motor for smooth and quiet curtain operation.',
-    imageUrl: '/images/PRODUCT DRIVE/CURTAIN TRACK & MOTOR/CURTAIN MOTOR.png',
+    imageUrl: `${process.env.R2_PUBLIC_URL}/images/PRODUCT DRIVE/CURTAIN TRACK & MOTOR/CURTAIN MOTOR.png`,
     category: 'curtain-track-motor'
   },
   {
     id: '2',
     name: 'Titan Switch - 2M 2Touch + Knob',
     description: 'Advanced titan switch with 2 modules and knob control.',
-    imageUrl: '/images/PRODUCT DRIVE/SMART SWITCH/TITTAN SWITCH FRONT SIDE/1. 2M 2TOUCH + KNOB.png',
+    imageUrl: `${process.env.R2_PUBLIC_URL}/images/PRODUCT DRIVE/SMART SWITCH/TITTAN SWITCH FRONT SIDE/1. 2M 2TOUCH + KNOB.png`,
     category: 'smart-switches'
   },
   {
     id: '3',
     name: 'RGB Bulb',
     description: 'Color-changing LED bulb with millions of colors.',
-    imageUrl: '/images/PRODUCT DRIVE/SMART LIGHT/RGB BULB.png',
+    imageUrl: `${process.env.R2_PUBLIC_URL}/images/PRODUCT DRIVE/SMART LIGHT/RGB BULB.png`,
     category: 'smart-lights'
   },
   {
     id: '4',
     name: 'Fingerprint Lock',
     description: 'Biometric lock with fingerprint recognition.',
-    imageUrl: '/images/PRODUCT DRIVE/LOCK/FINGERPRINT LOCK.png',
+    imageUrl: `${process.env.R2_PUBLIC_URL}/images/PRODUCT DRIVE/LOCK/FINGERPRINT LOCK.png`,
     category: 'smart-locks'
   },
   {
     id: '5',
     name: '8 Scene Switch',
     description: 'Programmable scene switch with 8 preset scenes.',
-    imageUrl: '/images/PRODUCT DRIVE/SCENE SWITCH/8 SCENE SWITCH.png',
+    imageUrl: `${process.env.R2_PUBLIC_URL}/images/PRODUCT DRIVE/SCENE SWITCH/8 SCENE SWITCH.png`,
     category: 'scene-switches'
   }
 ];
@@ -73,13 +73,21 @@ export async function GET(request: NextRequest) {
         id: product.id,
         name: product.name,
         description: product.description || '',
-        imageUrl: product.imageUrl || '',
+        imageUrl: product.image_url || '',
         category: product.category?.slug || null
+      }));
+
+      // Transform image URLs to use R2 public URL if they start with /images/
+      const productsWithR2Urls = transformedProducts.map((product: any) => ({
+        ...product,
+        imageUrl: product.imageUrl.startsWith('/images/') 
+          ? `${process.env.R2_PUBLIC_URL}${product.imageUrl}`
+          : product.imageUrl
       }));
 
       return NextResponse.json({
         success: true,
-        data: transformedProducts,
+        data: productsWithR2Urls,
         source: 'database'
       });
       
