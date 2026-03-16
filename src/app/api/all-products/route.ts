@@ -43,9 +43,7 @@ export const runtime = "nodejs";
 
 export async function GET(request: NextRequest) {
   try {
-    console.log('API called: /api/all-products');
-    console.log('DATABASE_URL exists:', !!process.env.DATABASE_URL);
-    console.log('NODE_ENV:', process.env.NODE_ENV);
+
     
     // Try to get products from database first
     const { getAllProducts } = await import('@/lib/products');
