@@ -117,13 +117,17 @@ export async function GET(request: NextRequest) {
       // Return all categories
       const categories = Object.keys(categoryMap).map(key => ({
         id: key,
+        slug: key,
         title: key.split('-').map(word => 
           word.charAt(0).toUpperCase() + word.slice(1)
         ).join(' '),
         folder: categoryMap[key]
       }));
       
-      return NextResponse.json({ categories });
+      return NextResponse.json({ 
+        success: true,
+        data: { categories }
+      });
     }
 
     // Return products from predefined database
