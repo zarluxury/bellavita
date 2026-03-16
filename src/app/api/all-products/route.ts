@@ -43,11 +43,16 @@ export const runtime = "nodejs";
 
 export async function GET(request: NextRequest) {
   try {
+    console.log('API called: /api/all-products');
+    console.log('DATABASE_URL exists:', !!process.env.DATABASE_URL);
+    console.log('NODE_ENV:', process.env.NODE_ENV);
+    
     // Try to get products from database first
     const { getAllProducts } = await import('@/lib/products');
     
-    if (process.env.DATABASE_URL) {
+    if (process.env.DATABASE_URL && process.env.DATABASE_URL.startsWith('postgresql://')) {
       try {
+        console.log('Attempting database connection...');
         const products = await getAllProducts();
         
         const transformedProducts = products.map((product: any) => ({
@@ -58,9 +63,12 @@ export async function GET(request: NextRequest) {
           category: product.category?.slug || null
         }));
 
+        console.log(`Successfully fetched ${products.length} products from database`);
+        
         return NextResponse.json({
           success: true,
-          data: transformedProducts
+          data: transformedProducts,
+          source: 'database'
         });
       } catch (dbError) {
         console.error('Database error, falling back to static data:', dbError);
@@ -69,28 +77,31 @@ export async function GET(request: NextRequest) {
         return NextResponse.json({
           success: true,
           data: staticProducts,
-          fallback: true
+          source: 'static_fallback',
+          error: 'Database connection failed'
         });
       }
     } else {
       // No database URL configured, use static data
-      console.warn('DATABASE_URL not configured, using static data');
+      console.warn('DATABASE_URL not configured or invalid, using static data');
       
       return NextResponse.json({
         success: true,
         data: staticProducts,
-        fallback: true
+        source: 'static_default',
+        warning: 'DATABASE_URL not configured'
       });
     }
 
   } catch (error) {
-    console.error('Error fetching all products:', error);
+    console.error('Unexpected error in /api/all-products:', error);
     
     // Final fallback to static data
     return NextResponse.json({
       success: true,
       data: staticProducts,
-      fallback: true
+      source: 'static_emergency',
+      error: 'Unexpected error occurred'
     });
   }
 }
