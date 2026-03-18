@@ -50,10 +50,13 @@ export async function query(text: string, params?: any[], retries = 2): Promise<
 // Database initialization
 export async function initializeDatabase() {
   try {
+    // Enable UUID extension
+    await query(`CREATE EXTENSION IF NOT EXISTS "uuid-ossp";`);
+
     // Create tables if they don't exist
     await query(`
       CREATE TABLE IF NOT EXISTS categories (
-        id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+        id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
         slug VARCHAR(255) UNIQUE NOT NULL,
         name VARCHAR(255) NOT NULL,
         created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
@@ -63,7 +66,7 @@ export async function initializeDatabase() {
 
     await query(`
       CREATE TABLE IF NOT EXISTS products (
-        id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+        id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
         name VARCHAR(255) NOT NULL,
         description TEXT,
         image_url VARCHAR(500),
@@ -74,10 +77,23 @@ export async function initializeDatabase() {
       );
     `);
 
+    await query(`
+      CREATE TABLE IF NOT EXISTS newsletter_subscriptions (
+        id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
+        email VARCHAR(255) UNIQUE NOT NULL,
+        timestamp TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+        ip VARCHAR(45),
+        user_agent TEXT,
+        created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+      );
+    `);
+
     // Create indexes
     await query(`CREATE INDEX IF NOT EXISTS idx_categories_slug ON categories(slug);`);
     await query(`CREATE INDEX IF NOT EXISTS idx_products_category_id ON products(category_id);`);
     await query(`CREATE INDEX IF NOT EXISTS idx_products_name ON products(name);`);
+    await query(`CREATE INDEX IF NOT EXISTS idx_newsletter_email ON newsletter_subscriptions(email);`);
+    await query(`CREATE INDEX IF NOT EXISTS idx_newsletter_timestamp ON newsletter_subscriptions(timestamp);`);
 
     // Create updated_at trigger function
     await query(`

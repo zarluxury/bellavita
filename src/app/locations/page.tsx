@@ -139,7 +139,7 @@ const LocationsPage: React.FC = () => {
             className="text-center text-white px-4 max-w-5xl mx-auto"
           >
             <h1 className="text-5xl md:text-7xl font-bold tracking-tight mb-6">
-              Our <span className="text-transparent bg-clip-text bg-gradient-to-r from-blue-400 to-cyan-400">Locations</span>
+              Project Location <span className="text-transparent bg-clip-text bg-linear-to-r from-blue-400 to-cyan-400">& Gallery</span>
             </h1>
             <p className="text-xl md:text-2xl text-gray-200 max-w-3xl mx-auto leading-relaxed">
               Discover our premium projects across India's major cities with cutting-edge smart home automation

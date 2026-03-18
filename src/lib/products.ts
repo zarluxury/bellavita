@@ -292,9 +292,13 @@ export async function getCategoryBySlug(slug: string) {
  * Create a new category
  */
 export async function createCategory(slug: string, name: string): Promise<Category> {
+  // Generate UUID manually to avoid database dependency issues
+  const { v4: uuidv4 } = await import('uuid');
+  const id = uuidv4();
+  
   const result = await query(
-    'INSERT INTO categories (slug, name) VALUES ($1, $2) RETURNING *',
-    [slug, name]
+    'INSERT INTO categories (id, slug, name, created_at, updated_at) VALUES ($1, $2, $3, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP) RETURNING *',
+    [id, slug, name]
   );
 
   return result.rows[0];

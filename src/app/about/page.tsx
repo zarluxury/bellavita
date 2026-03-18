@@ -6,6 +6,7 @@ import Navbar from '@/components/layout/Navbar';
 import Footer from '@/components/layout/Footer';
 import { Users, Award, Target, Lightbulb, CheckCircle2, MoveRight } from 'lucide-react';
 import Link from 'next/link';
+import OneApp from '@/components/home/OneApp';
 
 const AboutPage: React.FC = () => {
   const values = [
@@ -71,34 +72,9 @@ const AboutPage: React.FC = () => {
         </div>
       </section>
 
-      {/* Story Section: The Depth Box */}
-      <section className="py-20 px-6 max-w-7xl mx-auto">
-        <div className="relative p-1 md:p-12 rounded-[2.5rem] bg-[#0A0A0A] border border-white/10 shadow-[inset_0_1px_1px_rgba(255,255,255,0.05)]">
-          <div className="grid lg:grid-cols-2 gap-16 items-center">
-            <div className="space-y-6">
-              <h2 className="text-3xl font-bold tracking-tight">Making the Future Affordable.</h2>
-              <p className="text-gray-400 leading-relaxed">
-                Bellavita was born to bridge the gap. We integrate globally available smart home technologies 
-                and make them accessible at price points that make sense for the modern Indian home.
-              </p>
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 pt-4">
-                {['Lighting Control', 'Audio Systems', 'Biometric Security', 'Climate Control'].map(item => (
-                  <div key={item} className="flex items-center gap-3 text-sm font-medium text-gray-300">
-                    <CheckCircle2 className="w-5 h-5 text-blue-500" /> {item}
-                  </div>
-                ))}
-              </div>
-            </div>
-            <div className="relative aspect-video rounded-3xl overflow-hidden border border-white/10 bg-zinc-900 group">
-              <div className="absolute inset-0 bg-gradient-to-tr from-blue-600/20 to-transparent opacity-50" />
-              <div className="absolute inset-0 flex items-center justify-center p-8">
-                 <p className="text-center italic text-gray-500">"The future of living is smart, connected, and sustainable."</p>
-              </div>
-            </div>
-          </div>
-        </div>
-      </section>
-
+    <div className='px-24'>
+      <OneApp/>
+</div>
       {/* Values: Interaction Cards */}
       <section className="py-24 px-6 max-w-7xl mx-auto">
         <h2 className="text-center text-sm font-bold tracking-[0.2em] uppercase text-gray-500 mb-16">Our Core Values</h2>

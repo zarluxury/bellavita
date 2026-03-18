@@ -60,7 +60,9 @@ const Navbar: React.FC = () => {
                 whileHover={{ scale: 1.05 }}
                 className="flex items-center text-white hover:text-blue-400 hover:cursor-pointer transition-colors"
               >
+                <Link href="/solutions" className="text-white hover:text-blue-400 transition-colors">
                 SOLUTIONS
+              </Link>
               </motion.button>
               
 

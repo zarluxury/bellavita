@@ -2,7 +2,7 @@
 
 import React, { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Plus, Edit2, Trash2, Image as ImageIcon, Save, X, Upload, AlertCircle, CheckCircle } from 'lucide-react';
+import { Plus, Edit2, Trash2, Image as ImageIcon, Save, X, Upload, AlertCircle, CheckCircle, FolderPlus } from 'lucide-react';
 import Link from 'next/link';
 import Image from 'next/image';
 
@@ -32,10 +32,15 @@ export default function ProductManagementPage() {
   // Form states
   const [isAddingProduct, setIsAddingProduct] = useState(false);
   const [editingProduct, setEditingProduct] = useState<Product | null>(null);
+  const [isAddingCategory, setIsAddingCategory] = useState(false);
   const [formData, setFormData] = useState({
     name: '',
     description: '',
     categorySlug: '', // Changed from 'category' to 'categorySlug'
+  });
+  const [categoryForm, setCategoryForm] = useState({
+    name: '',
+    slug: ''
   });
   const [imageFile, setImageFile] = useState<File | null>(null);
   const [imagePreview, setImagePreview] = useState<string>('');
@@ -48,10 +53,13 @@ export default function ProductManagementPage() {
 
   const fetchCategories = async () => {
     try {
-      const response = await fetch('/api/products');
+      console.log('Fetching categories...');
+      const response = await fetch('/api/categories');
       const data = await response.json();
+      console.log('Categories response:', data);
       if (data.success) {
-        setCategories(data.data.categories || []);
+        setCategories(data.data || []);
+        console.log('Categories set:', data.data);
       }
     } catch (error) {
       console.error('Failed to fetch categories:', error);
@@ -194,6 +202,70 @@ export default function ProductManagementPage() {
     }
   };
 
+  const handleCategoryInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const { name, value } = e.target;
+    
+    // Auto-generate slug from name
+    if (name === 'name') {
+      const slug = value
+        .toLowerCase()
+        .replace(/[^a-z0-9\s-]/g, '')
+        .replace(/\s+/g, '-')
+        .replace(/-+/g, '-')
+        .replace(/^-+|-+$/g, ''); // Remove leading/trailing hyphens
+      setCategoryForm(prev => ({ 
+        name: value, 
+        slug: slug 
+      }));
+    } else {
+      setCategoryForm(prev => ({ ...prev, [name]: value }));
+    }
+  };
+
+  const handleCreateCategory = async (e: React.FormEvent) => {
+    e.preventDefault();
+    
+    if (!categoryForm.name || !categoryForm.slug) {
+      setError('Category name and slug are required');
+      return;
+    }
+
+    setUploading(true);
+    setError(null);
+    setSuccess(null);
+
+    try {
+      const response = await fetch('/api/categories', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          name: categoryForm.name,
+          slug: categoryForm.slug
+        }),
+      });
+
+      const data = await response.json();
+
+      if (data.success) {
+        setSuccess('Category created successfully!');
+        setCategoryForm({ name: '', slug: '' });
+        setIsAddingCategory(false);
+        console.log('Category created, refreshing categories list...');
+        await fetchCategories(); // Refresh categories list
+        console.log('Categories refreshed');
+      } else {
+        setError(data.error || 'Failed to create category');
+        console.error('Category creation failed:', data);
+      }
+    } catch (error) {
+      setError('An unexpected error occurred');
+    } finally {
+      setUploading(false);
+    }
+  };
+
   if (loading) {
     return (
       <div className="min-h-screen bg-black text-white flex items-center justify-center">
@@ -215,12 +287,14 @@ export default function ProductManagementPage() {
             <p className="text-gray-400">Manage your smart home products and images</p>
           </div>
           <div className="flex gap-4">
-            <Link 
-              href="/addproduct"
-              className="bg-gray-700 hover:bg-gray-600 text-white font-semibold py-2 px-4 rounded-lg transition-colors"
+
+            <button
+              onClick={() => setIsAddingCategory(true)}
+              className="bg-green-600 hover:bg-green-700 text-white font-semibold py-2 px-4 rounded-lg transition-colors flex items-center gap-2"
             >
-              Simple Form
-            </Link>
+              <FolderPlus className="w-5 h-5" />
+              Add Category
+            </button>
             <button
               onClick={() => setIsAddingProduct(true)}
               className="bg-blue-600 hover:bg-blue-700 text-white font-semibold py-2 px-4 rounded-lg transition-colors flex items-center gap-2"
@@ -260,6 +334,96 @@ export default function ProductManagementPage() {
               <button onClick={() => setSuccess(null)} className="ml-auto">
                 <X className="w-4 h-4" />
               </button>
+            </motion.div>
+          )}
+        </AnimatePresence>
+
+        {/* Category Creation Modal */}
+        <AnimatePresence>
+          {isAddingCategory && (
+            <motion.div
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+              className="fixed inset-0 bg-black/50 backdrop-blur-sm flex items-center justify-center z-50"
+            >
+              <motion.div
+                initial={{ opacity: 0, scale: 0.95 }}
+                animate={{ opacity: 1, scale: 1 }}
+                exit={{ opacity: 0, scale: 0.95 }}
+                className="bg-gray-900 rounded-xl p-6 border border-gray-800 w-full max-w-md mx-4"
+              >
+                <div className="flex items-center justify-between mb-6">
+                  <h2 className="text-xl font-semibold text-white flex items-center gap-2">
+                    <FolderPlus className="w-5 h-5 text-green-400" />
+                    Create New Category
+                  </h2>
+                  <button
+                    onClick={() => setIsAddingCategory(false)}
+                    className="text-gray-400 hover:text-white transition-colors"
+                  >
+                    <X className="w-6 h-6" />
+                  </button>
+                </div>
+
+                <form onSubmit={handleCreateCategory} className="space-y-4">
+                  {/* Category Name */}
+                  <div>
+                    <label className="block text-sm font-medium text-gray-300 mb-2">
+                      Category Name *
+                    </label>
+                    <input
+                      type="text"
+                      name="name"
+                      value={categoryForm.name}
+                      onChange={handleCategoryInputChange}
+                      required
+                      className="w-full px-4 py-2 bg-gray-800 border border-gray-700 rounded-lg focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-transparent text-white"
+                      placeholder="e.g., Smart Lights"
+                    />
+                  </div>
+
+                  {/* Category Slug */}
+                  <div>
+                    <label className="block text-sm font-medium text-gray-300 mb-2">
+                      Slug *
+                    </label>
+                    <input
+                      type="text"
+                      name="slug"
+                      value={categoryForm.slug}
+                      onChange={handleCategoryInputChange}
+                      required
+                      pattern="[a-z0-9-]+"
+                      title="Only lowercase letters, numbers, and hyphens allowed"
+                      className="w-full px-4 py-2 bg-gray-800 border border-gray-700 rounded-lg focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-transparent text-white"
+                      placeholder="e.g., smart-lights"
+                    />
+                    <p className="text-xs text-gray-500 mt-1">
+                      Auto-generated from name. Only lowercase letters, numbers, and hyphens.
+                    </p>
+                  </div>
+
+                  {/* Submit Buttons */}
+                  <div className="flex gap-4 pt-4">
+                    <button
+                      type="submit"
+                      disabled={uploading}
+                      className="flex-1 bg-green-600 hover:bg-green-700 disabled:opacity-50 text-white font-semibold py-2 px-4 rounded-lg transition-colors flex items-center justify-center gap-2"
+                    >
+                      <Save className="w-4 h-4" />
+                      {uploading ? 'Creating...' : 'Create Category'}
+                    </button>
+                    <button
+                      type="button"
+                      onClick={() => setIsAddingCategory(false)}
+                      className="flex-1 bg-gray-700 hover:bg-gray-600 text-white font-semibold py-2 px-4 rounded-lg transition-colors"
+                    >
+                      Cancel
+                    </button>
+                  </div>
+                </form>
+              </motion.div>
             </motion.div>
           )}
         </AnimatePresence>

@@ -32,8 +32,8 @@ const Hero: React.FC = () => {
             transition={{ duration: 1, delay: 0.2 }}
             className="text-4xl md:text-6xl lg:text-7xl font-bold mb-6 leading-tight"
           >
-            India's Leading
-            <span className="block text-blue-400">Automation Integrators</span>
+            Intelligent spaces
+            <span className="block text-blue-400">for every environment</span>
           </motion.h1>
           
           <motion.h2
@@ -42,7 +42,7 @@ const Hero: React.FC = () => {
             transition={{ duration: 1, delay: 0.4 }}
             className="text-2xl md:text-3xl lg:text-4xl font-light mb-12"
           >
-            Bellavita Smart Home
+            Smart Home • Office • Building • Hotel • Club
           </motion.h2>
           
           <motion.div

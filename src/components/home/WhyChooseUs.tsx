@@ -25,10 +25,10 @@ const WhyChooseUs: React.FC = () => {
   };
 
   const hotspots = [
-    { id: 1, x: '30%', y: '70%', title: 'Smart Living Room', content: 'Complete entertainment automation with voice-controlled audio.', image: '/images/whychooseus/sofa.jpg', category: 'Audio' },
-    { id: 2, x: '55%', y: '40%', title: 'Intelligent Lighting', content: 'Lighting that adapts to natural light and preferences.', image: '/images/whychooseus/dining table.jpg', category: 'Lighting' },
-    { id: 3, x: '20%', y: '40%', title: 'Automated Curtains', content: 'Curtain systems that respond to sunlight and schedules.', image: '/images/whychooseus/bed room.jpg', category: 'Comfort' },
-    { id: 4, x: '55%', y: '65%', title: 'Home Theater', content: '24/7 monitoring with smart locks and cameras.', image: '/images/whychooseus/home theat.jpg', category: 'Security' }
+    { id: 1, x: '19%', y: '70%', title: 'Touch Screen Smart', content: 'Wi-Fi IoT Control Scene Panel Gateway Switch | Wi-Fi + Zigbee| Home Automation |Scene interaction | Works with Mobile app Control,Amazon Alexa.', image: '/images/whychooseus/screen.jpg', category: 'Screen' },
+    { id: 2, x: '55%', y: '40%', title: 'Water Proof Strip', content: 'Lighting that adapts to natural light and preferences.', image: '/images/whychooseus/strip.jpg', category: 'Lighting' },
+    { id: 3, x: '80%', y: '40%', title: 'Automated Curtains', content: 'Curtain systems that respond to sunlight and schedules.', image: '/images/whychooseus/curtain.jpg', category: 'Comfort' },
+    { id: 4, x: '45%', y: '65%', title: 'Smart Swtich', content: '24/7 Working with smart Switch.', image: '/images/whychooseus/smartswitch.jpg', category: 'Switches' }
   ];
 
   const highlights = [
@@ -104,7 +104,7 @@ const WhyChooseUs: React.FC = () => {
                       className="absolute bottom-8 left-1/2 -translate-x-1/2 z-40 w-64 pointer-events-none"
                     >
                       <div className="bg-gray-900/95 backdrop-blur-xl border border-blue-500/30 rounded-2xl shadow-[0_20px_50px_rgba(0,0,0,0.5)] overflow-hidden">
-                        <img src={hotspot.image} alt="" className="h-32 w-full object-cover" />
+                        <img src={hotspot.image} alt="" className="h-32 w-full object-fill" />
                         <div className="p-4">
                           <span className="text-[10px] text-blue-400 font-bold uppercase tracking-wider">{hotspot.category}</span>
                           <h3 className="text-white font-bold text-sm mb-1">{hotspot.title}</h3>
