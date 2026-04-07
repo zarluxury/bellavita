@@ -139,7 +139,7 @@ const SolutionsPage: React.FC = () => {
       </section>
 
       {/* Testimonials: Premium Styling */}
-      <section className="py-32 px-6 bg-[#080808]">
+      {/* <section className="py-32 px-6 bg-[#080808]">
         <div className="max-w-7xl mx-auto">
           <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
             {[
@@ -161,7 +161,7 @@ const SolutionsPage: React.FC = () => {
             ))}
           </div>
         </div>
-      </section>
+      </section> */}
 
       <Footer />
     </div>
