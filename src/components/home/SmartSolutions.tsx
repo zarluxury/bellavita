@@ -60,7 +60,6 @@ const SmartSolutions: React.FC = () => {
       features: [
         'Centralized building management',
         'HVAC automation and optimization',
-        'Fire safety and emergency systems',
         'Predictive maintenance alerts'
       ],
       image: '/images/oursolutions/smart-building.jpeg',

@@ -69,13 +69,13 @@ const Navbar: React.FC = () => {
             </div>
 
             <motion.div whileHover={{ scale: 1.05 }}>
-              <Link href="/locations" className="text-white hover:text-blue-400 transition-colors">
-                LOCATIONS
+              <Link href="/feature-projects" className="text-white hover:text-blue-400 transition-colors">
+                FEATURE PROJECTS
               </Link>
             </motion.div>
             <motion.div whileHover={{ scale: 1.05 }}>
-              <Link href="/franchise" className="text-white hover:text-blue-400 transition-colors">
-                FRANCHISE
+              <Link href="/partners-with-us" className="text-white hover:text-blue-400 transition-colors">
+                PARTNERS WITH US
               </Link>
             </motion.div>
 
@@ -130,13 +130,13 @@ const Navbar: React.FC = () => {
                   </Link>
                 </motion.div>
                 <motion.div whileHover={{ x: 5 }}>
-                  <Link href="/locations" className="block text-white hover:text-blue-400 transition-colors">
-                    LOCATIONS
+                  <Link href="/feature-projects" className="block text-white hover:text-blue-400 transition-colors">
+                    FEATURE PROJECTS
                   </Link>
                 </motion.div>
                 <motion.div whileHover={{ x: 5 }}>
-                  <Link href="/franchise" className="block text-white hover:text-blue-400 transition-colors">
-                    FRANCHISE
+                  <Link href="/partners-with-us" className="block text-white hover:text-blue-400 transition-colors">
+                    PARTNERS WITH US
                   </Link>
                 </motion.div>
                 <motion.div whileHover={{ x: 5 }}>

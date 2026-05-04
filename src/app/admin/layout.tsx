@@ -1,7 +1,7 @@
 'use client';
 
 import Link from 'next/link';
-import { Package, Mail, BarChart3, LogOut } from 'lucide-react';
+import { Package, Mail, BarChart3, LogOut, FileText, MessageSquare } from 'lucide-react';
 import { useRouter, usePathname } from 'next/navigation';
 
 export default function AdminLayout({
@@ -62,6 +62,18 @@ export default function AdminLayout({
               <Link href="/admin/newsletter" className={getLinkStyle('/admin/newsletter')}>
                 <Mail className="w-5 h-5" />
                 <span>Newsletter</span>
+              </Link>
+            </li>
+            <li>
+              <Link href="/admin/contact-forms" className={getLinkStyle('/admin/contact-forms')}>
+                <FileText className="w-5 h-5" />
+                <span>Contact Forms</span>
+              </Link>
+            </li>
+            <li>
+              <Link href="/admin/get-in-touch" className={getLinkStyle('/admin/get-in-touch')}>
+                <MessageSquare className="w-5 h-5" />
+                <span>Get In Touch</span>
               </Link>
             </li>
           </ul>

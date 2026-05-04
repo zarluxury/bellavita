@@ -12,20 +12,26 @@ import {
   DollarSign,
   Activity,
   Eye,
-  ArrowRight
+  ArrowRight,
+  FileText,
+  MessageSquare
 } from 'lucide-react';
 
 interface DashboardStats {
   totalSubscriptions: number;
   totalProducts: number;
   recentSubscriptions: number;
+  totalContactForms: number;
+  totalGetInTouch: number;
 }
 
 export default function AdminDashboard() {
   const [stats, setStats] = useState<DashboardStats>({
     totalSubscriptions: 0,
     totalProducts: 0,
-    recentSubscriptions: 0
+    recentSubscriptions: 0,
+    totalContactForms: 0,
+    totalGetInTouch: 0
   });
   const [loading, setLoading] = useState(true);
 
@@ -43,10 +49,32 @@ export default function AdminDashboard() {
       const productsResponse = await fetch('/api/all-products');
       const productsData = await productsResponse.json();
 
+      // Fetch contact forms
+      let contactFormsCount = 0;
+      try {
+        const contactFormsResponse = await fetch('/api/contact-forms');
+        const contactFormsData = await contactFormsResponse.json();
+        contactFormsCount = contactFormsData.count || 0;
+      } catch {
+        contactFormsCount = 0;
+      }
+
+      // Fetch get in touch
+      let getInTouchCount = 0;
+      try {
+        const getInTouchResponse = await fetch('/api/get-in-touch');
+        const getInTouchData = await getInTouchResponse.json();
+        getInTouchCount = getInTouchData.count || 0;
+      } catch {
+        getInTouchCount = 0;
+      }
+
       setStats({
         totalSubscriptions: newsletterData.count || 0,
         totalProducts: productsData.data?.length || 0,
-        recentSubscriptions: newsletterData.data?.slice(0, 7).length || 0
+        recentSubscriptions: newsletterData.data?.slice(0, 7).length || 0,
+        totalContactForms: contactFormsCount,
+        totalGetInTouch: getInTouchCount
       });
     } catch (error) {
       console.error('Error fetching dashboard data:', error);
@@ -82,6 +110,24 @@ export default function AdminDashboard() {
       icon: Users,
       color: 'purple',
       link: '/admin/newsletter'
+    },
+    {
+      title: 'Contact Form Submissions',
+      value: stats.totalContactForms,
+      change: '+15%',
+      changeType: 'positive' as const,
+      icon: FileText,
+      color: 'cyan',
+      link: '/admin/contact-forms'
+    },
+    {
+      title: 'Get In Touch Submissions',
+      value: stats.totalGetInTouch,
+      change: '+10%',
+      changeType: 'positive' as const,
+      icon: MessageSquare,
+      color: 'orange',
+      link: '/admin/get-in-touch'
     }
   ];
 
@@ -106,6 +152,20 @@ export default function AdminDashboard() {
       icon: TrendingUp,
       link: '#',
       color: 'purple'
+    },
+    {
+      title: 'View Contact Forms',
+      description: 'Manage form submissions',
+      icon: FileText,
+      link: '/admin/contact-forms',
+      color: 'cyan'
+    },
+    {
+      title: 'Get In Touch',
+      description: 'View contact page inquiries',
+      icon: MessageSquare,
+      link: '/admin/get-in-touch',
+      color: 'orange'
     }
   ];
 
@@ -129,7 +189,7 @@ export default function AdminDashboard() {
       </motion.div>
 
       {/* Stats Grid */}
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-6 mb-8">
         {statCards.map((stat, index) => (
           <motion.div
             key={stat.title}

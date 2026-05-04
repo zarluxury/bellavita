@@ -76,20 +76,24 @@ const ContactPage: React.FC = () => {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setIsSubmitted(true);
-    
+
     try {
-      const response = await fetch('/api/sendEmail', {
+      // Save to database
+      const dbResponse = await fetch('/api/get-in-touch', {
         method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
+        headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
-          subject: 'Contact Inquiry',
-          ...formData
+          firstName: formData.firstName,
+          lastName: formData.lastName,
+          email: formData.email,
+          phone: formData.phone,
+          organization: formData.organization,
+          inquiryType: formData.inquiryType,
+          message: formData.message,
         }),
       });
 
-      if (response.ok) {
+      if (dbResponse.ok) {
         setFormData({
           firstName: '',
           lastName: '',
@@ -100,6 +104,18 @@ const ContactPage: React.FC = () => {
           message: ''
         });
       }
+
+      // Send email notification (non-blocking - don't await)
+      fetch('/api/sendEmail', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          subject: 'Contact Inquiry',
+          ...formData
+        }),
+      }).catch(() => {
+        // Email failed silently - data is already saved in DB
+      });
     } catch (error) {
       console.error('Error submitting form:', error);
     } finally {

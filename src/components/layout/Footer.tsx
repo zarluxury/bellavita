@@ -60,8 +60,8 @@ const Footer: React.FC = () => {
             <ul className="space-y-2">
               <li><Link href="/about" className="text-gray-400 hover:text-white transition-colors">About Us</Link></li>
               <li><Link href="/solutions" className="text-gray-400 hover:text-white transition-colors">Solutions</Link></li>
-              <li><Link href="/locations" className="text-gray-400 hover:text-white transition-colors">Locations</Link></li>
-              <li><Link href="/franchise" className="text-gray-400 hover:text-white transition-colors">Franchise</Link></li>
+              <li><Link href="/feature-projects" className="text-gray-400 hover:text-white transition-colors">Feature Projects</Link></li>
+              <li><Link href="/partners-with-us" className="text-gray-400 hover:text-white transition-colors">Partners With Us</Link></li>
               <li><Link href="/contact" className="text-gray-400 hover:text-white transition-colors">Contact</Link></li>
             </ul>
           </motion.div>
@@ -73,13 +73,13 @@ const Footer: React.FC = () => {
           >
             <h4 className="text-lg font-semibold mb-4">Contact Info</h4>
             <div className="space-y-3">
-              <div className="flex items-center space-x-3">
-                <MapPin size={16} className="text-blue-400" />
+              <div className="flex items-start space-x-3">
+                <MapPin size={16} className="text-blue-400 mt-1 shrink-0" />
                 <span className="text-gray-400 text-sm">
-                  8/62 Sahyog Society<br />
-                  Old Anand Nagar<br />
-                  Santacruz East<br />
-                  Mumbai 400055
+                  Laxmi Industrial Estate<br />
+                  Suresh Nagar<br />
+                  Andheri West<br />
+                  Mumbai, Maharashtra 400053
                 </span>
               </div>
               <div className="flex items-center space-x-3">
@@ -93,6 +93,35 @@ const Footer: React.FC = () => {
             </div>
           </motion.div>
         </div>
+
+        {/* Map Section */}
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.5, delay: 0.3 }}
+          className="mt-12"
+        >
+          <div className="rounded-2xl overflow-hidden border border-gray-800 bg-gray-900/50">
+            <div className="p-4 border-b border-gray-800">
+              <h4 className="text-lg font-semibold text-white flex items-center gap-2">
+                <MapPin size={18} className="text-blue-400" />
+                Find Us
+              </h4>
+            </div>
+            <div className="relative h-64 md:h-80">
+              <iframe
+                src="https://www.google.com/maps?q=Bellavita+Smart+Home,+Laxmi+Industrial+Estate,+Suresh+Nagar,+Andheri+West,+Mumbai,+Maharashtra+400053&output=embed"
+                width="100%"
+                height="100%"
+                style={{ border: 0 }}
+                allowFullScreen
+                loading="lazy"
+                referrerPolicy="no-referrer-when-downgrade"
+                className="grayscale hover:grayscale-0 transition-all duration-500"
+              />
+            </div>
+          </div>
+        </motion.div>
 
         <motion.div
           initial={{ opacity: 0 }}

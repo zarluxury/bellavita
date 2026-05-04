@@ -88,12 +88,51 @@ export async function initializeDatabase() {
       );
     `);
 
+    await query(`
+      CREATE TABLE IF NOT EXISTS contact_forms (
+        id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
+        name VARCHAR(255) NOT NULL,
+        email VARCHAR(255) NOT NULL,
+        automation_for VARCHAR(100),
+        project_type VARCHAR(100),
+        contact_number VARCHAR(20),
+        city VARCHAR(100),
+        details TEXT,
+        services TEXT[],
+        ip VARCHAR(45),
+        user_agent TEXT,
+        status VARCHAR(20) DEFAULT 'new',
+        created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+      );
+    `);
+
+    await query(`
+      CREATE TABLE IF NOT EXISTS get_in_touch (
+        id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
+        first_name VARCHAR(255) NOT NULL,
+        last_name VARCHAR(255) NOT NULL,
+        email VARCHAR(255) NOT NULL,
+        phone VARCHAR(20) NOT NULL,
+        organization VARCHAR(255),
+        inquiry_type VARCHAR(100),
+        message TEXT,
+        ip VARCHAR(45),
+        user_agent TEXT,
+        status VARCHAR(20) DEFAULT 'new',
+        created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+      );
+    `);
+
     // Create indexes
     await query(`CREATE INDEX IF NOT EXISTS idx_categories_slug ON categories(slug);`);
     await query(`CREATE INDEX IF NOT EXISTS idx_products_category_id ON products(category_id);`);
     await query(`CREATE INDEX IF NOT EXISTS idx_products_name ON products(name);`);
     await query(`CREATE INDEX IF NOT EXISTS idx_newsletter_email ON newsletter_subscriptions(email);`);
     await query(`CREATE INDEX IF NOT EXISTS idx_newsletter_timestamp ON newsletter_subscriptions(timestamp);`);
+    await query(`CREATE INDEX IF NOT EXISTS idx_contact_forms_created_at ON contact_forms(created_at);`);
+    await query(`CREATE INDEX IF NOT EXISTS idx_contact_forms_status ON contact_forms(status);`);
+    await query(`CREATE INDEX IF NOT EXISTS idx_get_in_touch_created_at ON get_in_touch(created_at);`);
+    await query(`CREATE INDEX IF NOT EXISTS idx_get_in_touch_status ON get_in_touch(status);`);
 
     // Create updated_at trigger function
     await query(`

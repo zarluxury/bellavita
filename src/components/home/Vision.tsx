@@ -41,6 +41,27 @@ const Vision: React.FC = () => {
 
 
       </div>
+
+      {/* Passion Statement */}
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 mt-16">
+        <motion.div
+          initial={{ opacity: 0, y: 30 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.8, delay: 0.2 }}
+          viewport={{ once: true }}
+          className="text-center"
+        >
+          <div className="bg-linear-to-r from-blue-900/30 to-purple-900/30 rounded-3xl p-12 border border-blue-500/20">
+            <p className="text-2xl md:text-3xl font-semibold text-white mb-4 leading-relaxed">
+              "Automation is not just a business for Bellavita — it's a passion"
+            </p>
+            <p className="text-xl text-gray-300 leading-relaxed">
+              We love to leave a signature feel or a unique touch in every home
+            </p>
+          </div>
+        </motion.div>
+      </div>
+
     </section>
   );
 };
