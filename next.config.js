@@ -9,6 +9,7 @@ const nextConfig = {
         pathname: '/**',
       },
     ],
+    domains: ['picsum.photos', 'fastly.picsum.photos'],
   },
   webpack: (config, { isServer }) => {
     if (!isServer) {
