@@ -72,74 +72,105 @@ const AboutPage: React.FC = () => {
         </div>
       </section>
 
-      {/* Founder Section */}
-      <section className="py-24 px-6">
-        <div className="max-w-7xl mx-auto">
-          <motion.div
-            initial={{ opacity: 0, y: 30 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.6 }}
-            viewport={{ once: true }}
-            className="text-center mb-16"
-          >
-            <span className="text-blue-500 font-bold tracking-[0.2em] uppercase text-xs mb-4 block">
-              Meet the Visionary
-            </span>
-            <h2 className="text-3xl md:text-5xl font-bold">
-              Led by <span className="text-transparent bg-clip-text bg-gradient-to-r from-blue-400 to-cyan-300">Passion</span>
-            </h2>
-          </motion.div>
+{/* Founder Section */}
+<section className="py-24 px-6">
+  <div className="max-w-7xl mx-auto">
+    <motion.div
+      initial={{ opacity: 0, y: 30 }}
+      whileInView={{ opacity: 1, y: 0 }}
+      transition={{ duration: 0.6 }}
+      viewport={{ once: true }}
+      className="text-center mb-16"
+    >
+      <span className="text-blue-500 font-bold tracking-[0.2em] uppercase text-xs mb-4 block">
+        Meet the Visionary
+      </span>
+      <h2 className="text-3xl md:text-5xl font-bold">
+        Led by <span className="text-transparent bg-clip-text bg-gradient-to-r from-blue-400 to-cyan-300">Passion</span>
+      </h2>
+    </motion.div>
 
-          <motion.div
-            initial={{ opacity: 0, y: 40 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.7, delay: 0.1 }}
-            viewport={{ once: true }}
-            className="max-w-3xl mx-auto"
-          >
-            <div className="relative group">
-              <div className="absolute -inset-1 bg-gradient-to-r from-blue-600 to-cyan-600 rounded-[2rem] blur opacity-25 group-hover:opacity-40 transition duration-500" />
-              <div className="relative bg-[#0A0A0A] border border-white/10 rounded-[2rem] p-8 md:p-12 flex flex-col md:flex-row items-center gap-8 md:gap-12">
-                {/* Founder Image */}
-                <div className="shrink-0">
-                  <div className="w-40 h-40 md:w-52 md:h-52 rounded-2xl bg-gradient-to-br from-blue-500/20 to-cyan-500/20 border border-white/10 flex items-center justify-center overflow-hidden relative">
-                    <img
-                      src="/images/founder.jpg"
-                      alt="Founder"
-                      className="w-full h-full object-cover absolute inset-0 z-10"
-                      onError={(e) => {
-                        (e.target as HTMLImageElement).style.display = 'none';
-                      }}
-                    />
-                    <User className="w-16 h-16 text-gray-600 relative z-0" />
-                  </div>
+    <motion.div
+      initial={{ opacity: 0, y: 40 }}
+      whileInView={{ opacity: 1, y: 0 }}
+      transition={{ duration: 0.7, delay: 0.1 }}
+      viewport={{ once: true }}
+      className="max-w-4xl mx-auto"
+    >
+      <div className="relative group">
+        {/* Animated gradient border */}
+        <div className="absolute -inset-1 bg-gradient-to-r from-blue-600 via-cyan-600 to-blue-600 rounded-[2rem] blur-xl opacity-30 group-hover:opacity-60 transition duration-500" />
+        
+        {/* Main card */}
+        <div className="relative bg-gradient-to-br from-[#0A0A0A] to-[#0F0F0F] border border-white/10 rounded-[2rem] p-8 md:p-10 overflow-hidden">
+          
+          {/* Background decorative elements */}
+          <div className="absolute top-0 right-0 w-64 h-64 bg-blue-500/5 rounded-full blur-3xl" />
+          <div className="absolute bottom-0 left-0 w-64 h-64 bg-cyan-500/5 rounded-full blur-3xl" />
+          
+          <div className="flex flex-col lg:flex-row items-center gap-10 lg:gap-14 relative z-10">
+            
+            {/* Founder Image Container - Responsive */}
+            <div className="shrink-0">
+              <div className="relative group/image">
+                {/* Image glow effect */}
+                <div className="absolute -inset-2 bg-gradient-to-r from-blue-500/30 to-cyan-500/30 rounded-2xl blur-xl opacity-0 group-hover/image:opacity-100 transition duration-500" />
+                
+                {/* Image container - removed gradient overlay */}
+                <div className="relative w-48 h-48 md:w-56 md:h-56 lg:w-64 lg:h-64 rounded-2xl overflow-hidden border-2 border-white/20 group-hover/image:border-blue-500/50 transition-all duration-300">
+                  {/* Image */}
+                  <img
+                    src="/images/Founder/founder.jpeg"
+                    alt="Founder"
+                    className="w-full h-full object-cover object-top transition-transform duration-700 group-hover/image:scale-110"
+                    onError={(e) => {
+                      const target = e.target as HTMLImageElement;
+                      target.style.display = 'none';
+                    }}
+                  />
                 </div>
+                
+                {/* Decorative ring */}
+                <div className="absolute -inset-3 rounded-2xl border border-dashed border-blue-500/30 opacity-0 group-hover/image:opacity-100 transition-opacity duration-500" />
+              </div>
+            </div>
 
-                {/* Founder Info */}
-                <div className="text-center md:text-left flex-1">
-                  <h3 className="text-2xl md:text-3xl font-bold text-white mb-2">
-                    Founder Name
-                  </h3>
-                  <p className="text-blue-400 font-semibold text-lg mb-4 tracking-wide uppercase">
+            {/* Founder Info */}
+            <div className="flex-1 text-center lg:text-left space-y-4">
+              <div>
+                <h3 className="text-3xl md:text-4xl lg:text-5xl font-bold text-white mb-2 bg-gradient-to-r from-white to-gray-300 bg-clip-text text-transparent">
+                  Amaan Lakhani
+                </h3>
+                <div className="inline-block">
+                  <p className="text-blue-400 font-semibold text-lg md:text-xl tracking-wide uppercase relative">
                     Founder & CEO
+                    <span className="absolute -bottom-1 left-0 right-0 h-px bg-gradient-to-r from-blue-500 to-transparent" />
                   </p>
-                  <p className="text-gray-400 leading-relaxed mb-6">
-                    The driving force behind Bellavita's vision to transform Indian homes into intelligent living spaces. With a deep passion for automation and design, leading the company from its inception to becoming a market leader.
-                  </p>
-                  <div className="flex items-center justify-center md:justify-start gap-3">
-                    <div className="px-4 py-2 rounded-full bg-white/5 border border-white/10 text-sm text-gray-300">
-                      Since 2018
-                    </div>
-                    <div className="px-4 py-2 rounded-full bg-white/5 border border-white/10 text-sm text-gray-300">
-                      Mumbai, India
-                    </div>
-                  </div>
+                </div>
+              </div>
+              
+              <p className="text-gray-400 leading-relaxed text-base md:text-lg max-w-xl mx-auto lg:mx-0">
+                The driving force behind Bellavita's vision to transform Indian homes into intelligent living spaces. With a deep passion for automation and design, leading the company from its inception to becoming a market leader.
+              </p>
+              
+              <div className="flex flex-wrap items-center justify-center lg:justify-start gap-3 pt-4">
+                <div className="px-4 py-2 rounded-full bg-white/5 border border-white/10 text-sm text-gray-300">
+                  Since 2018
+                </div>
+                <div className="px-4 py-2 rounded-full bg-white/5 border border-white/10 text-sm text-gray-300">
+                  Mumbai, India
+                </div>
+                <div className="px-4 py-2 rounded-full bg-white/5 border border-white/10 text-sm text-gray-300">
+                  6500+ Projects
                 </div>
               </div>
             </div>
-          </motion.div>
+          </div>
         </div>
-      </section>
+      </div>
+    </motion.div>
+  </div>
+</section>
 
     <div className='px-24'>
       <OneApp/>
