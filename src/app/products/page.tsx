@@ -96,72 +96,72 @@ const ProductsPage: React.FC = () => {
         </div>
       </section>
 
-      {/* Main Grid: Visual Clarity */}
-      <section className="py-24 px-6 max-w-7xl mx-auto">
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-10">
-          <AnimatePresence mode="popLayout">
-            {featuredProducts.map((product, idx) => {
-              const config = CATEGORY_CONFIG[product.category] || { icon: Layers, color: 'from-gray-500 to-gray-700', title: product.category };
-              const Icon = config.icon;
+{/* Main Grid - Visual Clarity */}
+<section className="py-24 px-6 max-w-7xl mx-auto">
+  <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-10">
+    <AnimatePresence mode="popLayout">
+      {featuredProducts.map((product, idx) => {
+        const config = CATEGORY_CONFIG[product.category] || { icon: Layers, color: 'from-gray-500 to-gray-700', title: product.category };
+        const Icon = config.icon;
 
-              return (
-                <motion.div
-                  key={product.id}
-                  initial={{ opacity: 0, y: 40 }}
-                  whileInView={{ opacity: 1, y: 0 }}
-                  viewport={{ once: true }}
-                  transition={{ delay: idx * 0.1, duration: 0.5 }}
+        return (
+          <motion.div
+            key={product.id}
+            initial={{ opacity: 0, y: 40 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            transition={{ delay: idx * 0.1, duration: 0.5 }}
+            className="h-full"
+          >
+            <div className="group relative bg-[#0A0A0A] rounded-3xl p-4 transition-all duration-500 h-full flex flex-col
+              border border-white/10 
+              hover:border-blue-500/50 
+              shadow-[inset_0_1px_1px_0_rgba(255,255,255,0.05)]
+              hover:shadow-[0_0_30px_rgba(59,130,246,0.1)]">
+              
+              {/* Optional: Animated Border Gradient (The "Glow" effect) */}
+              <div className="absolute -inset-px bg-gradient-to-r from-transparent via-white/10 to-transparent rounded-3xl opacity-0 group-hover:opacity-100 transition-opacity duration-500 pointer-events-none" />
+
+              {/* Image Container with fixed aspect ratio */}
+              <div className="relative w-full overflow-hidden rounded-2xl bg-zinc-900 border border-white/5 aspect-square">
+                <Image
+                  src={product.imageUrl}
+                  alt={product.name}
+                  fill
+                  className="object-cover transition-transform duration-700 group-hover:scale-105"
+                />
+              </div>
+
+              {/* Content Area - Flexible but same height */}
+              <div className="mt-6 px-2 relative z-10 flex flex-col flex-grow">
+                <div className="flex justify-between items-start gap-3 mb-4">
+                  <h3 className="text-2xl font-semibold tracking-tight text-white/90 line-clamp-2 flex-1">
+                    {product.name}
+                  </h3>
+                  <div className={`p-2 rounded-xl bg-gradient-to-br ${config.color} border border-white/20 flex-shrink-0`}>
+                    <Icon className="w-5 h-5 text-white" />
+                  </div>
+                </div>
+                
+                <p className="text-gray-400 text-sm leading-relaxed mb-6 line-clamp-2 flex-grow">
+                  {product.description}
+                </p>
+                
+                <Link 
+                  href={`/products/${product.category}`}
+                  className="flex items-center justify-between w-full p-4 rounded-xl border border-white/5 bg-white/5 hover:bg-white/10 hover:border-white/20 transition-all group/btn mt-auto"
                 >
-                  <div className="group relative bg-[#0A0A0A] rounded-3xl p-4 transition-all duration-500 
-                /* Primary Border */
-                border border-white/10 
-                /* Subtle Glow on Hover */
-                hover:border-blue-500/50 
-                /* Inner Shadow for Depth */
-                shadow-[inset_0_1px_1px_0_rgba(255,255,255,0.05)]
-                hover:shadow-[0_0_30px_rgba(59,130,246,0.1)]">
-  
-  {/* Optional: Animated Border Gradient (The "Glow" effect) */}
-  <div className="absolute -inset-px bg-gradient-to-r from-transparent via-white/10 to-transparent rounded-3xl opacity-0 group-hover:opacity-100 transition-opacity duration-500 pointer-events-none" />
-
-  {/* Image Container with its own border */}
-  <div className="relative h-72 w-full overflow-hidden rounded-2xl bg-zinc-900 border border-white/5">
-    <Image
-      src={product.imageUrl}
-      alt={product.name}
-      fill
-      className="object-fill transition-transform duration-700 group-hover:scale-105 opacity-90"
-    />
+                  <span className="text-sm font-medium">View Collection</span>
+                  <ArrowRight className="w-4 h-4 transition-transform group-hover/btn:translate-x-1" />
+                </Link>
+              </div>
+            </div>
+          </motion.div>
+        );
+      })}
+    </AnimatePresence>
   </div>
-
-  {/* Content Area */}
-  <div className="mt-6 px-2 relative z-10">
-    <div className="flex justify-between items-center mb-4">
-      <h3 className="text-2xl font-semibold tracking-tight text-white/90">{product.name}</h3>
-      <div className={`p-2 rounded-xl bg-gradient-to-br ${config.color} border border-white/20`}>
-        <Icon className="w-5 h-5 text-white" />
-      </div>
-    </div>
-    
-    <p className="text-gray-400 text-sm leading-relaxed mb-8 line-clamp-2">
-      {product.description}
-    </p>
-    
-    <Link 
-      href={`/products/${product.category}`}
-      className="flex items-center justify-between w-full p-4 rounded-xl border border-white/5 bg-white/5 hover:bg-white/10 hover:border-white/20 transition-all group/btn"
-    >
-      <span className="text-sm font-medium">View Collection</span>
-      <ArrowRight className="w-4 h-4 transition-transform group-hover/btn:translate-x-1" />
-    </Link>
-  </div>
-</div>
-                </motion.div>
-              );
-            })}
-          </AnimatePresence>
-        </div>
-      </section>
+</section>
 
       {/* Modern Category Footer */}
       <section className="py-20 border-t border-white/5 bg-[#080808]">

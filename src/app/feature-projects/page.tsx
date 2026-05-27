@@ -353,9 +353,6 @@ const LocationsPage: React.FC = () => {
                     Schedule a Visit
                   </button>
                 </Link>
-                <button className="px-8 py-4 border border-white text-white rounded-full font-semibold hover:bg-white hover:text-black transition-all duration-300">
-                  Download Brochure
-                </button>
               </div>
             </div>
           </motion.div>

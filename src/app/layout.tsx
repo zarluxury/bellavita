@@ -53,9 +53,9 @@ export const metadata: Metadata = {
     "home automation distributor india",
   ],
   icons: {
-    icon: "/images/logo/favicon.ico",
-    shortcut: "/images/logo/favicon.ico",
-    apple: "/images/logo/favicon.ico",
+    icon: "/favicon.ico",
+    shortcut: "/favicon.ico",
+    apple: "/favicon.ico",
   },
   openGraph: {
     title: "Bellavita Smart Home — Best Home Automation Brand in Mumbai & India",
@@ -114,7 +114,7 @@ export default function RootLayout({
         '@id': 'https://bellavita.com/#organization',
         name: 'Bellavita Smart Home',
         url: 'https://bellavita.com',
-        logo: 'https://bellavita.com/images/logo/favicon.ico',
+        logo: 'https://bellavita.com/favicon.ico',
         description: "India's best home automation brand based in Mumbai, Maharashtra. Premium smart home solutions with 6500+ projects completed since 2018.",
         foundingDate: '2018',
         address: {
@@ -247,15 +247,19 @@ export default function RootLayout({
   };
 
   return (
-    <html lang="en-IN">
+    <html lang="en-IN" suppressHydrationWarning>
       <head>
         <script
           type="application/ld+json"
           dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
         />
+        <link rel="icon" href="/favicon.ico" type="image/x-icon" />
+        <link rel="shortcut icon" href="/favicon.ico" type="image/x-icon" />
+        <link rel="apple-touch-icon" href="/favicon.ico" />
       </head>
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
+        suppressHydrationWarning
       >
         {children}
       </body>

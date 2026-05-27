@@ -67,7 +67,7 @@ export default function AdminLayout({
             <li>
               <Link href="/admin/contact-forms" className={getLinkStyle('/admin/contact-forms')}>
                 <FileText className="w-5 h-5" />
-                <span>Contact Forms</span>
+                <span>Leads</span>
               </Link>
             </li>
             <li>
