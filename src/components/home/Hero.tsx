@@ -86,7 +86,7 @@ const Hero: React.FC = () => {
   };
 
   return (
-    <section className="relative min-h-screen overflow-hidden">
+    <section className="relative overflow-hidden min-h-screen">
       <div className="absolute inset-0">
         <video
           autoPlay
@@ -100,15 +100,15 @@ const Hero: React.FC = () => {
         <div className="absolute inset-0 bg-linear-to-b from-black/60 via-black/50 to-black/80" />
       </div>
 
-      <div className="relative z-10 min-h-screen flex items-center justify-center py-20 px-4">
-        <div className="w-full max-w-7xl mx-auto grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
+      <div className="relative z-10 flex items-center justify-center py-24 md:py-28 px-4">
+        <div className="w-full max-w-7xl mx-auto grid grid-cols-1 lg:grid-cols-2 gap-6 lg:gap-12 items-start lg:items-center">
 
-          {/* Left - Heading + CTA */}
+          {/* Left - Heading + CTA (hidden on mobile, shown on lg+) */}
           <motion.div
             initial={{ opacity: 0, x: -40 }}
             animate={{ opacity: 1, x: 0 }}
             transition={{ duration: 1 }}
-            className="text-white"
+            className="text-white hidden lg:block"
           >
             <motion.h1
               initial={{ opacity: 0, y: 30 }}
@@ -117,7 +117,7 @@ const Hero: React.FC = () => {
               className="text-4xl md:text-5xl lg:text-6xl font-bold mb-4 leading-tight"
             >
               Let's Make Your{' '}
-              <span className="text-transparent bg-clip-text bg-gradient-to-r from-blue-400 to-cyan-300">Space Smarter</span>
+              <span className="text-transparent bg-clip-text bg-linear-to-r from-blue-400 to-cyan-300">Space Smarter</span>
             </motion.h1>
 
             <motion.h2
@@ -151,35 +151,49 @@ const Hero: React.FC = () => {
             </motion.div>
           </motion.div>
 
+          {/* Mobile-only compact heading above form */}
+          <motion.div
+            initial={{ opacity: 0, y: -20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.8 }}
+            className="text-white text-center lg:hidden"
+          >
+            <h1 className="text-3xl font-bold leading-tight">
+              Let's Make Your{' '}
+              <span className="text-transparent bg-clip-text bg-linear-to-r from-blue-400 to-cyan-300">Space Smarter</span>
+            </h1>
+            <p className="text-gray-400 text-sm mt-2">Tell us about your project — we'll craft the perfect smart solution.</p>
+          </motion.div>
+
           {/* Right - Contact Form */}
           <motion.div
             initial={{ opacity: 0, x: 40 }}
             animate={{ opacity: 1, x: 0 }}
             transition={{ duration: 1, delay: 0.3 }}
           >
-            <div className="bg-black/60 backdrop-blur-xl border border-white/10 rounded-3xl p-6 md:p-8 shadow-2xl">
-              <form onSubmit={handleSubmit} className="space-y-5">
+            <div className="bg-black/60 backdrop-blur-xl border border-white/10 rounded-2xl p-4 md:p-8 shadow-2xl">
+              <form onSubmit={handleSubmit} className="space-y-3 md:space-y-5">
 
                 {/* Row 1: Name + Email */}
-                <div className="grid grid-cols-1 sm:grid-cols-2 gap-5">
+                <div className="grid grid-cols-2 gap-3 md:gap-5">
                   <div>
-                    <label className="block text-sm text-gray-300 mb-2 font-medium">Name</label>
+                    <label className="block text-xs md:text-sm text-gray-300 mb-1 md:mb-2 font-medium">Name</label>
                     <input
                       type="text"
                       value={formData.name}
                       onChange={(e) => setFormData({ ...formData, name: e.target.value })}
-                      className="w-full px-4 py-3 bg-white/5 border border-white/10 rounded-xl text-white placeholder-gray-500 focus:outline-none focus:border-blue-500/50 focus:ring-1 focus:ring-blue-500/30 transition-all"
+                      className="w-full px-3 py-2 md:px-4 md:py-3 bg-white/5 border border-white/10 rounded-xl text-white text-sm placeholder-gray-500 focus:outline-none focus:border-blue-500/50 focus:ring-1 focus:ring-blue-500/30 transition-all"
                       placeholder="Your name"
                       required
                     />
                   </div>
                   <div>
-                    <label className="block text-sm text-gray-300 mb-2 font-medium">Email</label>
+                    <label className="block text-xs md:text-sm text-gray-300 mb-1 md:mb-2 font-medium">Email</label>
                     <input
                       type="email"
                       value={formData.email}
                       onChange={(e) => setFormData({ ...formData, email: e.target.value })}
-                      className="w-full px-4 py-3 bg-white/5 border border-white/10 rounded-xl text-white placeholder-gray-500 focus:outline-none focus:border-blue-500/50 focus:ring-1 focus:ring-blue-500/30 transition-all"
+                      className="w-full px-3 py-2 md:px-4 md:py-3 bg-white/5 border border-white/10 rounded-xl text-white text-sm placeholder-gray-500 focus:outline-none focus:border-blue-500/50 focus:ring-1 focus:ring-blue-500/30 transition-all"
                       placeholder="your@email.com"
                       required
                     />
@@ -187,59 +201,59 @@ const Hero: React.FC = () => {
                 </div>
 
                 {/* Row 2: Automation For + Project Type */}
-                <div className="grid grid-cols-1 sm:grid-cols-2 gap-5">
+                <div className="grid grid-cols-2 gap-3 md:gap-5">
                   <div className="relative">
-                    <label className="block text-sm text-gray-300 mb-2 font-medium">Automation For</label>
+                    <label className="block text-xs md:text-sm text-gray-300 mb-1 md:mb-2 font-medium">Automation For</label>
                     <div className="relative">
                       <select
                         value={formData.automationFor}
                         onChange={(e) => setFormData({ ...formData, automationFor: e.target.value })}
-                        className="w-full px-4 py-3 bg-white/5 border border-white/10 rounded-xl text-white appearance-none focus:outline-none focus:border-blue-500/50 focus:ring-1 focus:ring-blue-500/30 transition-all cursor-pointer"
+                        className="w-full px-3 py-2 md:px-4 md:py-3 bg-white/5 border border-white/10 rounded-xl text-white text-sm appearance-none focus:outline-none focus:border-blue-500/50 focus:ring-1 focus:ring-blue-500/30 transition-all cursor-pointer"
                       >
                         {automationOptions.map(opt => (
                           <option key={opt} value={opt} className="bg-gray-900 text-white">{opt}</option>
                         ))}
                       </select>
-                      <ChevronDown className="absolute right-3 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400 pointer-events-none" />
+                      <ChevronDown className="absolute right-2 top-1/2 -translate-y-1/2 w-3 h-3 md:w-4 md:h-4 text-gray-400 pointer-events-none" />
                     </div>
                   </div>
                   <div className="relative">
-                    <label className="block text-sm text-gray-300 mb-2 font-medium">Project Type</label>
+                    <label className="block text-xs md:text-sm text-gray-300 mb-1 md:mb-2 font-medium">Project Type</label>
                     <div className="relative">
                       <select
                         value={formData.projectType}
                         onChange={(e) => setFormData({ ...formData, projectType: e.target.value })}
-                        className="w-full px-4 py-3 bg-white/5 border border-white/10 rounded-xl text-white appearance-none focus:outline-none focus:border-blue-500/50 focus:ring-1 focus:ring-blue-500/30 transition-all cursor-pointer"
+                        className="w-full px-3 py-2 md:px-4 md:py-3 bg-white/5 border border-white/10 rounded-xl text-white text-sm appearance-none focus:outline-none focus:border-blue-500/50 focus:ring-1 focus:ring-blue-500/30 transition-all cursor-pointer"
                       >
                         {projectTypeOptions.map(opt => (
                           <option key={opt} value={opt} className="bg-gray-900 text-white">{opt}</option>
                         ))}
                       </select>
-                      <ChevronDown className="absolute right-3 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400 pointer-events-none" />
+                      <ChevronDown className="absolute right-2 top-1/2 -translate-y-1/2 w-3 h-3 md:w-4 md:h-4 text-gray-400 pointer-events-none" />
                     </div>
                   </div>
                 </div>
 
                 {/* Row 3: Services Checkboxes */}
                 <div>
-                  <label className="block text-sm text-gray-300 mb-3 font-medium">Services Interested In (Optional)</label>
-                  <div className="grid grid-cols-2 sm:grid-cols-3 gap-3">
+                  <label className="block text-xs md:text-sm text-gray-300 mb-1.5 md:mb-3 font-medium">Services Interested In <span className="text-gray-500">(Optional)</span></label>
+                  <div className="grid grid-cols-3 gap-1.5 md:gap-3">
                     {serviceOptions.map((service) => (
                       <label
                         key={service.id}
-                        className={`flex items-center gap-2 px-3 py-2.5 rounded-lg border cursor-pointer transition-all ${
+                        className={`flex items-center gap-1.5 px-2 py-1.5 md:px-3 md:py-2.5 rounded-lg border cursor-pointer transition-all ${
                           formData.services.includes(service.id)
                             ? 'border-blue-500/50 bg-blue-500/10'
                             : 'border-white/10 bg-white/5 hover:border-white/20'
                         }`}
                       >
-                        <div className={`w-4 h-4 rounded border flex items-center justify-center transition-all ${
+                        <div className={`w-3 h-3 md:w-4 md:h-4 shrink-0 rounded border flex items-center justify-center transition-all ${
                           formData.services.includes(service.id)
                             ? 'bg-blue-500 border-blue-500'
                             : 'border-gray-500'
                         }`}>
                           {formData.services.includes(service.id) && (
-                            <svg className="w-3 h-3 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <svg className="w-2 h-2 md:w-3 md:h-3 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={3} d="M5 13l4 4L19 7" />
                             </svg>
                           )}
@@ -250,32 +264,32 @@ const Hero: React.FC = () => {
                           checked={formData.services.includes(service.id)}
                           onChange={() => handleServiceToggle(service.id)}
                         />
-                        <span className="text-sm text-gray-300">{service.label}</span>
+                        <span className="text-xs text-gray-300 leading-tight">{service.label}</span>
                       </label>
                     ))}
                   </div>
                 </div>
 
                 {/* Row 4: Contact Number + City */}
-                <div className="grid grid-cols-1 sm:grid-cols-2 gap-5">
+                <div className="grid grid-cols-2 gap-3 md:gap-5">
                   <div>
-                    <label className="block text-sm text-gray-300 mb-2 font-medium">Contact Number</label>
+                    <label className="block text-xs md:text-sm text-gray-300 mb-1 md:mb-2 font-medium">Contact Number</label>
                     <input
                       type="tel"
                       value={formData.contactNumber}
                       onChange={(e) => setFormData({ ...formData, contactNumber: e.target.value })}
-                      className="w-full px-4 py-3 bg-white/5 border border-white/10 rounded-xl text-white placeholder-gray-500 focus:outline-none focus:border-blue-500/50 focus:ring-1 focus:ring-blue-500/30 transition-all"
+                      className="w-full px-3 py-2 md:px-4 md:py-3 bg-white/5 border border-white/10 rounded-xl text-white text-sm placeholder-gray-500 focus:outline-none focus:border-blue-500/50 focus:ring-1 focus:ring-blue-500/30 transition-all"
                       placeholder="+91 ..."
                       required
                     />
                   </div>
                   <div>
-                    <label className="block text-sm text-gray-300 mb-2 font-medium">City</label>
+                    <label className="block text-xs md:text-sm text-gray-300 mb-1 md:mb-2 font-medium">City</label>
                     <input
                       type="text"
                       value={formData.city}
                       onChange={(e) => setFormData({ ...formData, city: e.target.value })}
-                      className="w-full px-4 py-3 bg-white/5 border border-white/10 rounded-xl text-white placeholder-gray-500 focus:outline-none focus:border-blue-500/50 focus:ring-1 focus:ring-blue-500/30 transition-all"
+                      className="w-full px-3 py-2 md:px-4 md:py-3 bg-white/5 border border-white/10 rounded-xl text-white text-sm placeholder-gray-500 focus:outline-none focus:border-blue-500/50 focus:ring-1 focus:ring-blue-500/30 transition-all"
                       placeholder="Your city"
                       required
                     />
@@ -284,18 +298,18 @@ const Hero: React.FC = () => {
 
                 {/* Row 5: Details */}
                 <div>
-                  <label className="block text-sm text-gray-300 mb-2 font-medium">Details</label>
+                  <label className="block text-xs md:text-sm text-gray-300 mb-1 md:mb-2 font-medium">Details</label>
                   <textarea
                     value={formData.details}
                     onChange={(e) => setFormData({ ...formData, details: e.target.value })}
-                    rows={3}
-                    className="w-full px-4 py-3 bg-white/5 border border-white/10 rounded-xl text-white placeholder-gray-500 focus:outline-none focus:border-blue-500/50 focus:ring-1 focus:ring-blue-500/30 transition-all resize-none"
+                    rows={2}
+                    className="w-full px-3 py-2 md:px-4 md:py-3 bg-white/5 border border-white/10 rounded-xl text-white text-sm placeholder-gray-500 focus:outline-none focus:border-blue-500/50 focus:ring-1 focus:ring-blue-500/30 transition-all resize-none"
                     placeholder="Tell us more about your project..."
                   />
                 </div>
 
-                {/* Disclaimer */}
-                <p className="text-xs text-gray-500 leading-relaxed">
+                {/* Disclaimer - hidden on mobile */}
+                <p className="hidden md:block text-xs text-gray-500 leading-relaxed">
                   By submitting this form, you agree that we may use your information for marketing purposes and to send you announcements.
                 </p>
 
@@ -304,7 +318,7 @@ const Hero: React.FC = () => {
                   type="submit"
                   size="lg"
                   disabled={submitStatus === 'submitting'}
-                  className="w-full py-4 text-lg font-semibold disabled:opacity-50 disabled:cursor-not-allowed"
+                  className="w-full py-3 md:py-4 text-base md:text-lg font-semibold disabled:opacity-50 disabled:cursor-not-allowed"
                 >
                   {submitStatus === 'submitting' ? 'Submitting...' : submitStatus === 'success' ? 'Submitted Successfully!' : submitStatus === 'error' ? 'Something went wrong. Try again.' : 'Submit'}
                 </Button>
