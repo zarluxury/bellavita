@@ -1,6 +1,9 @@
 import { NextRequest, NextResponse } from 'next/server';
+import { requireApiToken } from '@/lib/apiToken';
 
 export async function POST(request: NextRequest) {
+  const authError = requireApiToken(request);
+  if (authError) return authError;
   try {
     const body = await request.json();
     const { name, email, phone, preferredDate, message, to, subject } = body;

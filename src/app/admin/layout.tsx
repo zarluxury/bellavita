@@ -3,6 +3,7 @@
 import Link from 'next/link';
 import { Package, Mail, BarChart3, LogOut, FileText, MessageSquare } from 'lucide-react';
 import { useRouter, usePathname } from 'next/navigation';
+import { apiHeaders } from '@/lib/apiHeaders';
 
 export default function AdminLayout({
   children,
@@ -14,7 +15,7 @@ export default function AdminLayout({
 
   const handleLogout = async () => {
     try {
-      await fetch('/api/admin/login', { method: 'DELETE' });
+      await fetch('/api/admin/login', { method: 'DELETE', headers: apiHeaders() });
       router.push('/admin/login');
     } catch (error) {
       console.error('Logout error:', error);

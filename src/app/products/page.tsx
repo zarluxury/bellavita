@@ -11,6 +11,7 @@ import {
 } from 'lucide-react';
 import Link from 'next/link';
 import Image from 'next/image';
+import { apiHeaders } from '@/lib/apiHeaders';
 
 // --- Types & Constants ---
 interface Product {
@@ -43,8 +44,8 @@ const ProductsPage: React.FC = () => {
     const fetchData = async () => {
       try {
         const [pRes, cRes] = await Promise.all([
-          fetch('/api/all-products'),
-          fetch('/api/products')
+          fetch('/api/all-products', { headers: apiHeaders() }),
+          fetch('/api/products', { headers: apiHeaders() })
         ]);
         if (!pRes.ok || !cRes.ok) throw new Error('Failed to synchronize hardware data.');
         

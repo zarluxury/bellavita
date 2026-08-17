@@ -16,6 +16,7 @@ import {
   FileText,
   MessageSquare
 } from 'lucide-react';
+import { apiHeaders } from '@/lib/apiHeaders';
 
 interface DashboardStats {
   totalSubscriptions: number;
@@ -42,17 +43,17 @@ export default function AdminDashboard() {
   const fetchDashboardData = async () => {
     try {
       // Fetch newsletter subscriptions
-      const newsletterResponse = await fetch('/api/newsletter');
+      const newsletterResponse = await fetch('/api/newsletter', { headers: apiHeaders() });
       const newsletterData = await newsletterResponse.json();
-      
+
       // Fetch products
-      const productsResponse = await fetch('/api/all-products');
+      const productsResponse = await fetch('/api/all-products', { headers: apiHeaders() });
       const productsData = await productsResponse.json();
 
       // Fetch contact forms
       let contactFormsCount = 0;
       try {
-        const contactFormsResponse = await fetch('/api/contact-forms');
+        const contactFormsResponse = await fetch('/api/contact-forms', { headers: apiHeaders() });
         const contactFormsData = await contactFormsResponse.json();
         contactFormsCount = contactFormsData.count || 0;
       } catch {
@@ -62,7 +63,7 @@ export default function AdminDashboard() {
       // Fetch get in touch
       let getInTouchCount = 0;
       try {
-        const getInTouchResponse = await fetch('/api/get-in-touch');
+        const getInTouchResponse = await fetch('/api/get-in-touch', { headers: apiHeaders() });
         const getInTouchData = await getInTouchResponse.json();
         getInTouchCount = getInTouchData.count || 0;
       } catch {

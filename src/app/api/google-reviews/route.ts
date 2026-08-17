@@ -1,4 +1,5 @@
-import { NextResponse } from 'next/server';
+import { NextRequest, NextResponse } from 'next/server';
+import { requireApiToken } from '@/lib/apiToken';
 
 // Google Places API endpoint
 const PLACES_API_URL = 'https://maps.googleapis.com/maps/api/place/details/json';
@@ -7,7 +8,9 @@ const PLACES_API_URL = 'https://maps.googleapis.com/maps/api/place/details/json'
 // Use: https://developers.google.com/maps/documentation/places/web-service/place-id
 const PLACE_ID = process.env.GOOGLE_PLACE_ID || 'ChIJd_5j9Q3-5IkR_xhDjxgG2E8'; // Example Place ID
 
-export async function GET() {
+export async function GET(request: NextRequest) {
+  const authError = requireApiToken(request);
+  if (authError) return authError;
   try {
     const apiKey = process.env.GOOGLE_PLACES_API_KEY;
     

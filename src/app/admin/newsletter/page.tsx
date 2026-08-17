@@ -3,6 +3,7 @@
 import { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
 import { Mail, Users, Calendar, Search, Download, Trash2, ExternalLink } from 'lucide-react';
+import { apiHeaders } from '@/lib/apiHeaders';
 
 interface NewsletterSubscription {
   id: string;
@@ -36,10 +37,7 @@ export default function NewsletterAdmin() {
     try {
       setLoading(true);
       const response = await fetch('/api/newsletter', {
-        headers: {
-          // Remove authentication for development
-          // 'Authorization': `Bearer ${process.env.NEXT_PUBLIC_ADMIN_API_KEY || 'your-admin-key'}`
-        }
+        headers: apiHeaders()
       });
 
       if (!response.ok) {

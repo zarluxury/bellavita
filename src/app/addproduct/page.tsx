@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
+import { apiHeaders } from '@/lib/apiHeaders';
 
 interface Category {
   id: string;
@@ -28,7 +29,7 @@ export default function AddProductPage() {
 
   const fetchCategories = async () => {
     try {
-      const response = await fetch('/api/products');
+      const response = await fetch('/api/products', { headers: apiHeaders() });
       const data = await response.json();
       setCategories(data.categories || []);
     } catch (error) {
@@ -77,6 +78,7 @@ export default function AddProductPage() {
 
       const response = await fetch('/api/products', {
         method: 'POST',
+        headers: apiHeaders(),
         body: formPayload,
       });
 

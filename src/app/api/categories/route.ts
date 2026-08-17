@@ -1,7 +1,10 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { createCategory } from '@/lib/products';
+import { requireApiToken } from '@/lib/apiToken';
 
 export async function POST(request: NextRequest) {
+  const authError = requireApiToken(request);
+  if (authError) return authError;
   try {
     const { name, slug } = await request.json();
 
@@ -64,7 +67,9 @@ export async function POST(request: NextRequest) {
   }
 }
 
-export async function GET() {
+export async function GET(request: NextRequest) {
+  const authError = requireApiToken(request);
+  if (authError) return authError;
   try {
     const { getAllCategories } = await import('@/lib/products');
     const categories = await getAllCategories();

@@ -8,6 +8,7 @@ import { Navigation, Pagination, Autoplay } from 'swiper/modules';
 import 'swiper/css';
 import 'swiper/css/navigation';
 import 'swiper/css/pagination';
+import { apiHeaders } from '@/lib/apiHeaders';
 
 interface GoogleReview {
   author_name: string;
@@ -40,7 +41,7 @@ const GoogleReviews = () => {
     const fetchReviews = async () => {
       try {
         setLoading(true);
-        const response = await fetch('/api/google-reviews');
+        const response = await fetch('/api/google-reviews', { headers: apiHeaders() });
         const result = await response.json();
         
         if (result.success) {

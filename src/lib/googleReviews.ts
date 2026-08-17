@@ -1,4 +1,5 @@
 // Google Reviews API helper functions
+import { apiHeaders } from '@/lib/apiHeaders';
 
 export interface GoogleReview {
   author_name: string;
@@ -102,7 +103,7 @@ export const mockGoogleReviews: ReviewsResponse = {
 // Function to fetch Google Reviews from API
 export async function fetchGoogleReviews(): Promise<ReviewsResponse> {
   try {
-    const response = await fetch('/api/google-reviews');
+    const response = await fetch('/api/google-reviews', { headers: apiHeaders() });
     
     if (!response.ok) {
       throw new Error(`HTTP error! status: ${response.status}`);

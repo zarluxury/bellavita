@@ -6,6 +6,7 @@ import { Power, Lock, Lightbulb, PanelTop, Camera, Activity, Smartphone, Monitor
 import Card from '../ui/Card';
 import Link from 'next/link';
 import Image from 'next/image';
+import { apiHeaders } from '@/lib/apiHeaders';
 
 interface Product {
   id: string;
@@ -37,7 +38,7 @@ const Products: React.FC = () => {
     const loadProducts = async () => {
       try {
         setLoading(true);
-        const response = await fetch('/api/all-products');
+        const response = await fetch('/api/all-products', { headers: apiHeaders() });
         const data = await response.json();
         
         if (data.success && data.data) {

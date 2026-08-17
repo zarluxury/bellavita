@@ -1,7 +1,10 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { pool } from '@/lib/db';
+import { requireApiToken } from '@/lib/apiToken';
 
 export async function POST(request: NextRequest) {
+  const authError = requireApiToken(request);
+  if (authError) return authError;
   try {
     const body = await request.json();
     const { firstName, lastName, email, phone, organization, inquiryType, message } = body;
@@ -52,6 +55,8 @@ export async function POST(request: NextRequest) {
 }
 
 export async function GET(request: NextRequest) {
+  const authError = requireApiToken(request);
+  if (authError) return authError;
   try {
     const { searchParams } = new URL(request.url);
     const status = searchParams.get('status');
@@ -83,6 +88,8 @@ export async function GET(request: NextRequest) {
 }
 
 export async function PATCH(request: NextRequest) {
+  const authError = requireApiToken(request);
+  if (authError) return authError;
   try {
     const { id, status } = await request.json();
     if (!id || !status) return NextResponse.json({ error: 'Missing id or status' }, { status: 400 });
@@ -98,6 +105,8 @@ export async function PATCH(request: NextRequest) {
 }
 
 export async function DELETE(request: NextRequest) {
+  const authError = requireApiToken(request);
+  if (authError) return authError;
   try {
     const { searchParams } = new URL(request.url);
     const id = searchParams.get('id');

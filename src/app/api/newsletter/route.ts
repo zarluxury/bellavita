@@ -1,5 +1,6 @@
-import { NextResponse } from 'next/server';
+import { NextRequest, NextResponse } from 'next/server';
 import { pool } from '@/lib/db';
+import { requireApiToken } from '@/lib/apiToken';
 
 interface NewsletterSubscription {
   email: string;
@@ -8,7 +9,9 @@ interface NewsletterSubscription {
   userAgent?: string;
 }
 
-export async function POST(request: Request) {
+export async function POST(request: NextRequest) {
+  const authError = requireApiToken(request);
+  if (authError) return authError;
   try {
     const { email } = await request.json();
 
@@ -136,7 +139,9 @@ function isValidEmail(email: string): boolean {
 }
 
 // GET endpoint to retrieve subscriptions (admin only)
-export async function GET(request: Request) {
+export async function GET(request: NextRequest) {
+  const authError = requireApiToken(request);
+  if (authError) return authError;
   try {
     // Skip authentication for development - remove in production
     if (process.env.NODE_ENV === 'development') {

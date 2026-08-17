@@ -14,6 +14,7 @@ import {
   Send,
   CheckCircle
 } from 'lucide-react';
+import { apiHeaders } from '@/lib/apiHeaders';
 
 const ContactPage: React.FC = () => {
   const [formData, setFormData] = useState({
@@ -81,7 +82,7 @@ const ContactPage: React.FC = () => {
       // Save to database
       const dbResponse = await fetch('/api/get-in-touch', {
         method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
+        headers: apiHeaders({ 'Content-Type': 'application/json' }),
         body: JSON.stringify({
           firstName: formData.firstName,
           lastName: formData.lastName,
@@ -108,7 +109,7 @@ const ContactPage: React.FC = () => {
       // Send email notification (non-blocking - don't await)
       fetch('/api/sendEmail', {
         method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
+        headers: apiHeaders({ 'Content-Type': 'application/json' }),
         body: JSON.stringify({
           subject: 'Contact Inquiry',
           ...formData

@@ -1,4 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server';
+import { requireApiToken } from '@/lib/apiToken';
 
 // Fallback static data when database is not available
 const staticProducts = [
@@ -42,6 +43,8 @@ const staticProducts = [
 export const runtime = "nodejs";
 
 export async function GET(request: NextRequest) {
+  const authError = requireApiToken(request);
+  if (authError) return authError;
   try {
     // First, check if we have a valid DATABASE_URL
     const hasValidDbUrl = process.env.DATABASE_URL && 

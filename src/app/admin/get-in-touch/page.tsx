@@ -3,6 +3,7 @@
 import { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { MessageSquare, Search, Download, Trash2, Eye, RefreshCw, ChevronDown, X, Phone, Mail, Building, User, Clock } from 'lucide-react';
+import { apiHeaders } from '@/lib/apiHeaders';
 
 interface GetInTouchSubmission {
   id: string;
@@ -42,7 +43,7 @@ export default function GetInTouchAdmin() {
     try {
       setLoading(true);
       const url = statusFilter !== 'all' ? `/api/get-in-touch?status=${statusFilter}` : '/api/get-in-touch';
-      const response = await fetch(url);
+      const response = await fetch(url, { headers: apiHeaders() });
       if (!response.ok) throw new Error('Failed to fetch');
       const data = await response.json();
       if (data.success) setSubmissions(data.data);
@@ -66,7 +67,7 @@ export default function GetInTouchAdmin() {
   const handleStatusChange = async (id: string, newStatus: string) => {
     try {
       const response = await fetch('/api/get-in-touch', {
-        method: 'PATCH', headers: { 'Content-Type': 'application/json' },
+        method: 'PATCH', headers: apiHeaders({ 'Content-Type': 'application/json' }),
         body: JSON.stringify({ id, status: newStatus }),
       });
       if (response.ok) {
@@ -79,7 +80,7 @@ export default function GetInTouchAdmin() {
   const handleDelete = async (id: string) => {
     if (!confirm('Are you sure you want to delete this submission?')) return;
     try {
-      const response = await fetch(`/api/get-in-touch?id=${id}`, { method: 'DELETE' });
+      const response = await fetch(`/api/get-in-touch?id=${id}`, { method: 'DELETE', headers: apiHeaders() });
       if (response.ok) {
         setSubmissions(prev => prev.filter(s => s.id !== id));
         if (selectedSubmission?.id === id) setSelectedSubmission(null);

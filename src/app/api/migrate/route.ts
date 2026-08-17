@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { uploadToR2 } from '@/lib/r2';
 import { createProduct, getAllCategories } from '@/lib/products';
+import { requireApiToken } from '@/lib/apiToken';
 
 // Sample hardcoded products data for migration
 const sampleProducts = [
@@ -67,6 +68,8 @@ const sampleProducts = [
 ];
 
 export async function POST(request: NextRequest) {
+  const authError = requireApiToken(request);
+  if (authError) return authError;
   try {
     const { action } = await request.json();
 

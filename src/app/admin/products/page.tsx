@@ -5,6 +5,7 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { Plus, Edit2, Trash2, Image as ImageIcon, Save, X, Upload, AlertCircle, CheckCircle, FolderPlus } from 'lucide-react';
 import Link from 'next/link';
 import Image from 'next/image';
+import { apiHeaders } from '@/lib/apiHeaders';
 
 interface Product {
   id: string;
@@ -54,7 +55,7 @@ export default function ProductManagementPage() {
   const fetchCategories = async () => {
     try {
       console.log('Fetching categories...');
-      const response = await fetch('/api/categories');
+      const response = await fetch('/api/categories', { headers: apiHeaders() });
       const data = await response.json();
       console.log('Categories response:', data);
       if (data.success) {
@@ -69,7 +70,7 @@ export default function ProductManagementPage() {
   const fetchProducts = async () => {
     try {
       setLoading(true);
-      const response = await fetch('/api/all-products');
+      const response = await fetch('/api/all-products', { headers: apiHeaders() });
       const data = await response.json();
       
       if (data.success) {
@@ -143,6 +144,7 @@ export default function ProductManagementPage() {
 
       const response = await fetch('/api/products', {
         method: 'POST',
+        headers: apiHeaders(),
         body: formPayload,
       });
 
@@ -189,6 +191,7 @@ export default function ProductManagementPage() {
     try {
       const response = await fetch(`/api/products/${productId}`, {
         method: 'DELETE',
+        headers: apiHeaders(),
       });
 
       if (response.ok) {
@@ -237,9 +240,7 @@ export default function ProductManagementPage() {
     try {
       const response = await fetch('/api/categories', {
         method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
+        headers: apiHeaders({ 'Content-Type': 'application/json' }),
         body: JSON.stringify({
           name: categoryForm.name,
           slug: categoryForm.slug

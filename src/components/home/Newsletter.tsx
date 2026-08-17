@@ -3,6 +3,7 @@
 import { useState } from 'react';
 import { motion } from 'framer-motion';
 import { Mail, Send, CheckCircle, AlertCircle, Sparkles } from 'lucide-react';
+import { apiHeaders } from '@/lib/apiHeaders';
 
 const Newsletter = () => {
   const [email, setEmail] = useState('');
@@ -29,9 +30,7 @@ const Newsletter = () => {
     try {
       const response = await fetch('/api/newsletter', {
         method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
+        headers: apiHeaders({ 'Content-Type': 'application/json' }),
         body: JSON.stringify({ email }),
       });
 

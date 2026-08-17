@@ -16,6 +16,7 @@ import {
   CheckCircle,
   Building
 } from 'lucide-react';
+import { apiHeaders } from '@/lib/apiHeaders';
 
 const FranchisePage: React.FC = () => {
   const [formData, setFormData] = useState({
@@ -92,9 +93,7 @@ const FranchisePage: React.FC = () => {
     try {
       const response = await fetch('/api/sendEmail', {
         method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
+        headers: apiHeaders({ 'Content-Type': 'application/json' }),
         body: JSON.stringify({
           subject: 'Franchise Inquiry',
           ...formData

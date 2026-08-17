@@ -3,6 +3,7 @@ import { validateProductFormData } from '@/lib/api-utils';
 import { createProduct } from '@/lib/products';
 import { query } from '@/lib/db';
 import { uploadToR2 } from '@/lib/r2';
+import { requireApiToken } from '@/lib/apiToken';
 
 const categoryMap: { [key: string]: string } = {
   'smart-switches': 'SMART SWITCH',
@@ -113,6 +114,8 @@ const productDatabase: { [key: string]: any[] } = {
 };
 
 export async function GET(request: NextRequest) {
+  const authError = requireApiToken(request);
+  if (authError) return authError;
   try {
     const { searchParams } = new URL(request.url);
     const category = searchParams.get('category');
@@ -158,6 +161,8 @@ export async function GET(request: NextRequest) {
 }
 
 export async function POST(request: NextRequest) {
+  const authError = requireApiToken(request);
+  if (authError) return authError;
   try {
     const formData = await request.formData();
     

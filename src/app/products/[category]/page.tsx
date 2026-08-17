@@ -11,6 +11,7 @@ import {
 } from 'lucide-react';
 import Link from 'next/link';
 import Image from 'next/image';
+import { apiHeaders } from '@/lib/apiHeaders';
 
 interface Product {
   name: string;
@@ -44,7 +45,7 @@ const ProductCategoryPage = () => {
   useEffect(() => {
     const loadProducts = async () => {
       try {
-        const response = await fetch('/api/all-products');
+        const response = await fetch('/api/all-products', { headers: apiHeaders() });
         const data = await response.json();
         if (data.success && data.data) {
           const filtered = data.data

@@ -3,6 +3,7 @@
 import React, { useState } from 'react';
 import { motion } from 'framer-motion';
 import { Calendar, User, Phone, Mail, MessageSquare, Send } from 'lucide-react';
+import { apiHeaders } from '@/lib/apiHeaders';
 
 interface FormData {
   name: string;
@@ -40,9 +41,7 @@ const ConsultationForm: React.FC = () => {
       // Send email to client
       const response = await fetch('/api/consultation', {
         method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
+        headers: apiHeaders({ 'Content-Type': 'application/json' }),
         body: JSON.stringify({
           ...formData,
           subject: 'New Consultation Request - Bellavita Smart Home',

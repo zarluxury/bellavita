@@ -1,10 +1,13 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { deleteProduct } from '@/lib/products';
+import { requireApiToken } from '@/lib/apiToken';
 
 export async function DELETE(
   request: NextRequest,
   { params }: { params: Promise<{ id: string }> }
 ) {
+  const authError = requireApiToken(request);
+  if (authError) return authError;
   try {
     const { id: productId } = await params;
 

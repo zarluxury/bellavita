@@ -5,6 +5,7 @@ import { motion } from 'framer-motion';
 import Button from '../ui/Button';
 import Link from 'next/link';
 import { ChevronDown } from 'lucide-react';
+import { apiHeaders } from '@/lib/apiHeaders';
 
 const automationOptions = ['Apartment', 'Villa / Bungalow', 'Office', 'Hotel','Building','Club','Other'];
 const projectTypeOptions = ['New Building', 'Renovation', 'Existing Property'];
@@ -47,7 +48,7 @@ const Hero: React.FC = () => {
     try {
       const response = await fetch('/api/contact-forms', {
         method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
+        headers: apiHeaders({ 'Content-Type': 'application/json' }),
         body: JSON.stringify({
           name: formData.name,
           email: formData.email,

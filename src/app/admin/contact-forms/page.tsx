@@ -3,6 +3,7 @@
 import { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { FileText, Search, Download, Trash2, Eye, RefreshCw, ChevronDown, X, Phone, Mail, MapPin, Building, User, Clock } from 'lucide-react';
+import { apiHeaders } from '@/lib/apiHeaders';
 
 interface ContactForm {
   id: string;
@@ -54,7 +55,7 @@ export default function ContactFormsAdmin() {
     try {
       setLoading(true);
       const url = statusFilter !== 'all' ? `/api/contact-forms?status=${statusFilter}` : '/api/contact-forms';
-      const response = await fetch(url);
+      const response = await fetch(url, { headers: apiHeaders() });
 
       if (!response.ok) throw new Error('Failed to fetch forms');
 
@@ -87,7 +88,7 @@ export default function ContactFormsAdmin() {
     try {
       const response = await fetch('/api/contact-forms', {
         method: 'PATCH',
-        headers: { 'Content-Type': 'application/json' },
+        headers: apiHeaders({ 'Content-Type': 'application/json' }),
         body: JSON.stringify({ id, status: newStatus }),
       });
 
@@ -106,7 +107,7 @@ export default function ContactFormsAdmin() {
     if (!confirm('Are you sure you want to delete this submission?')) return;
 
     try {
-      const response = await fetch(`/api/contact-forms?id=${id}`, { method: 'DELETE' });
+      const response = await fetch(`/api/contact-forms?id=${id}`, { method: 'DELETE', headers: apiHeaders() });
       if (response.ok) {
         setForms(prev => prev.filter(f => f.id !== id));
         if (selectedForm?.id === id) setSelectedForm(null);
