@@ -4,7 +4,7 @@ import { useState } from 'react';
 import { motion } from 'framer-motion';
 import { Mail, Lock, Eye, EyeOff, Shield } from 'lucide-react';
 import Link from 'next/link';
-import { useRouter } from 'next/navigation';
+import { useRouter, useSearchParams } from 'next/navigation';
 import { apiHeaders } from '@/lib/apiHeaders';
 
 export default function AdminLogin() {
@@ -14,6 +14,7 @@ export default function AdminLogin() {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
   const router = useRouter();
+  const searchParams = useSearchParams();
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -30,7 +31,12 @@ export default function AdminLogin() {
       const data = await response.json();
 
       if (data.success) {
-        router.push('/admin/products');
+        const redirectTo = searchParams.get('redirect');
+        const target = redirectTo && redirectTo.startsWith('/admin') && redirectTo !== '/admin/login'
+          ? redirectTo
+          : '/admin/products';
+        router.push(target);
+        router.refresh();
       } else {
         setError(data.error || 'Login failed');
       }
